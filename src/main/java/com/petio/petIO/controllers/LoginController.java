@@ -1,7 +1,5 @@
 package com.petio.petIO.controllers;
 
-import java.util.Objects;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,40 +17,41 @@ import com.petio.petIO.beans.Result;
 import com.petio.petIO.beans.SignupInfo;
 import com.petio.petIO.beans.User;
 import com.petio.petIO.mapper.UserMapper;
+
 @Controller
 public class LoginController {
 	@Autowired
 	UserMapper usermapper;
-	
+
 	@CrossOrigin
-    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-    @ResponseBody
-    public Result login(@Valid @RequestBody LoginInfo loginInfoVo, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            String message = String.format("登陆失败，详细信息[%s]。", bindingResult.getFieldError().getDefaultMessage());
-            return ResultFactory.buildFailResult(message);
-        }
-        
-        User user = usermapper.getUserByName(loginInfoVo.getUsername());
-        if(user != null && user.getPassword().equals(loginInfoVo.getPassword())) {
-        	return ResultFactory.buildSuccessResult("登陆成功。");
-        }
-        String message = String.format("登陆失败，详细信息[用户名、密码信息不正确]。");
-        return ResultFactory.buildFailResult(message);
-        
-    }
-	
+	@RequestMapping(value = "/api/login", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public Result login(@Valid @RequestBody LoginInfo loginInfoVo, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			String message = String.format("登陆失败，详细信息[%s]。", bindingResult.getFieldError().getDefaultMessage());
+			return ResultFactory.buildFailResult(message);
+		}
+
+		User user = usermapper.getUserByName(loginInfoVo.getUsername());
+		if (user != null && user.getPassword().equals(loginInfoVo.getPassword())) {
+			return ResultFactory.buildSuccessResult("登陆成功。");
+		}
+		String message = String.format("登陆失败，详细信息[用户名、密码信息不正确]。");
+		return ResultFactory.buildFailResult(message);
+
+	}
+
 	@CrossOrigin
-    @RequestMapping(value = "/signup", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-    @ResponseBody
-    public Result signup(@Valid @RequestBody SignupInfo signupInfoVo, BindingResult bindingResult) {
-       User user = usermapper.getUserByName(signupInfoVo.getUsername());
-       if(user != null) {
-    	   return ResultFactory.buildFailResult("用户已存在");
-       }
-       User user2 = new User(signupInfoVo.getUsername(),signupInfoVo.getPassword(),signupInfoVo.getUserTel());
-       usermapper.add(user2);
-       return ResultFactory.buildSuccessResult("注册成功");
-    }
-	
+	@RequestMapping(value = "/api/signup", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public Result signup(@Valid @RequestBody SignupInfo signupInfoVo, BindingResult bindingResult) {
+		User user = usermapper.getUserByName(signupInfoVo.getUsername());
+		if (user != null) {
+			return ResultFactory.buildFailResult("用户已存在");
+		}
+		User user2 = new User(signupInfoVo.getUsername(), signupInfoVo.getPassword(), signupInfoVo.getUserTel());
+		usermapper.add(user2);
+		return ResultFactory.buildSuccessResult("注册成功");
+	}
+
 }
