@@ -17,11 +17,12 @@ import com.petio.petIO.beans.Result;
 import com.petio.petIO.beans.SignupInfo;
 import com.petio.petIO.beans.User;
 import com.petio.petIO.mapper.UserMapper;
+import com.petio.petIO.services.UserService;
 
 @Controller
 public class LoginController {
 	@Autowired
-	UserMapper usermapper;
+	UserService userService;
 
 	@CrossOrigin
 	@RequestMapping(value = "/api/login", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
@@ -32,7 +33,7 @@ public class LoginController {
 			return ResultFactory.buildFailResult(message);
 		}
 
-		User user = usermapper.getUserByName(loginInfoVo.getUsername());
+		User user = userService.getUserByName(loginInfoVo.getUsername());
 		if (user != null && user.getPassword().equals(loginInfoVo.getPassword())) {
 			return ResultFactory.buildSuccessResult("登陆成功。");
 		}
@@ -45,12 +46,12 @@ public class LoginController {
 	@RequestMapping(value = "/api/signup", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public Result signup(@Valid @RequestBody SignupInfo signupInfoVo, BindingResult bindingResult) {
-		User user = usermapper.getUserByName(signupInfoVo.getUsername());
+		User user = userService.getUserByName(signupInfoVo.getUsername());
 		if (user != null) {
 			return ResultFactory.buildFailResult("用户已存在");
 		}
 		User user2 = new User(signupInfoVo.getUsername(), signupInfoVo.getPassword(), signupInfoVo.getUserTel(), 0);
-		usermapper.add(user2);
+		userService.add(user2);
 		return ResultFactory.buildSuccessResult("注册成功");
 	}
 

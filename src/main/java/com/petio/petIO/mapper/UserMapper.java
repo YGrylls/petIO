@@ -9,9 +9,9 @@ import com.petio.petIO.beans.User;
 @Mapper
 public interface UserMapper {
 
-	@Select("select * from User where username = #{username}")
+	@Select("select username,password,userTel,userScore from User where username = #{username}")
 	public User getUserByName(String username);
 
-	@Insert("insert into User (username,password,userTel)values(#{username},#{password},#{userTel},#{userScore})")
+	@Insert("insert into User (username,password,userTel,userScore)values(#{username},#{password},#{userTel},#{userScore})")
 	public Integer add(User user);
 }
