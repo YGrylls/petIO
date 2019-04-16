@@ -49,7 +49,7 @@ public class LoginController {
 		if (user != null) {
 			return ResultFactory.buildFailResult("用户已存在");
 		}
-		User user2 = new User(signupInfoVo.getUsername(), signupInfoVo.getPassword(), signupInfoVo.getUserTel());
+		User user2 = new User(signupInfoVo.getUsername(), signupInfoVo.getPassword(), signupInfoVo.getUserTel(), 0);
 		usermapper.add(user2);
 		return ResultFactory.buildSuccessResult("注册成功");
 	}
