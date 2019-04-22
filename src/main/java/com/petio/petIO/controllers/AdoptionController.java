@@ -66,8 +66,8 @@ public class AdoptionController {
 		if(times > 3)return ResultFactory.buildFailResult("超过今日申请次数！");
 		
 		if(!adoptionListService.checkApply(id, uid)) {    //没申请过
-			adoptionListService.addOffer(id, uid);
-			adoptionListService.addApplyTimes(id, uid);     //增加今日申请次数，暂时没实现
+			adoptionListService.addApply(id, uid);
+			adoptionListService.addApplyTimes(uid);     //增加今日申请次数
 			return ResultFactory.buildSuccessResult("申请成功！");
 		}
 		else {
