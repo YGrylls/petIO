@@ -12,29 +12,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.petio.petIO.Utils.ResultFactory;
-import com.petio.petIO.beans.Fosterage;
+import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.Result;
 import com.petio.petIO.beans.SearchInfo;
-import com.petio.petIO.services.FosterageListService;
+import com.petio.petIO.services.AdoptionListService;
 
 @Controller
-public class FosterageController {
+public class AdoptionController {
 	
 	@Autowired
-	private FosterageListService fosterageListService;
+	private AdoptionListService adoptionListService;
 	
 	@CrossOrigin
-	@RequestMapping(value = "/api/fosterage", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/adoption", method = RequestMethod.POST)
 	@ResponseBody
 	public Result getFosterage(@RequestBody SearchInfo searchInfoVo,
 			BindingResult bindingResult) {
 		System.out.println("searchText :"+searchInfoVo.getSearchText()+", regionSelect : "+searchInfoVo.getRegionSelect()
 		+", kindSelect : "+ searchInfoVo.getKindSelect());
-		List<Fosterage> fosterageList = fosterageListService.doFiler(searchInfoVo.getSearchText(),
+		List<Adoption> adoptionList = adoptionListService.doFiler(searchInfoVo.getSearchText(),
 																	searchInfoVo.getRegionSelect(), 
 																	searchInfoVo.getKindSelect(), 
 																	searchInfoVo.getPage());
-		System.out.println(fosterageList.get(0));
-		return ResultFactory.buildSuccessResult(fosterageList);
+		System.out.println(adoptionList);
+		return ResultFactory.buildSuccessResult(adoptionList);
 	}
 }
