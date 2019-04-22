@@ -16,7 +16,6 @@ import com.petio.petIO.beans.LoginInfo;
 import com.petio.petIO.beans.Result;
 import com.petio.petIO.beans.SignupInfo;
 import com.petio.petIO.beans.User;
-import com.petio.petIO.mapper.UserMapper;
 import com.petio.petIO.services.UserService;
 
 @Controller
@@ -32,7 +31,6 @@ public class LoginController {
 			String message = String.format("登陆失败，详细信息[%s]。", bindingResult.getFieldError().getDefaultMessage());
 			return ResultFactory.buildFailResult(message);
 		}
-
 		User user = userService.getUserByName(loginInfoVo.getUsername());
 		if (user != null && user.getPassword().equals(loginInfoVo.getPassword())) {
 			return ResultFactory.buildSuccessResult("登陆成功。");
