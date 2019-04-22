@@ -2,6 +2,7 @@ package com.petio.petIO.beans;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Adoption {
 	private int aID;
@@ -14,6 +15,7 @@ public class Adoption {
 	private int aRead;
 	private Date startDate;
 	private int aState;
+	private List<String>imgPaths;
 	public int getaID() {
 		return aID;
 	}
@@ -73,6 +75,12 @@ public class Adoption {
 	}
 	public void setaState(int aState) {
 		this.aState = aState;
+	}
+	public List<String> getImgPaths() {
+		return imgPaths;
+	}
+	public void setImgPaths(List<String> imgPaths) {
+		this.imgPaths = imgPaths;
 	}
 
 	
