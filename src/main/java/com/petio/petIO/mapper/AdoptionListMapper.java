@@ -17,9 +17,9 @@ public interface AdoptionListMapper {
 	public Integer getTotalNumber(String title,String location,String type);
 	
 	@SelectProvider(type=SqlProvider.class,method="getAdoption")
-<<<<<<< HEAD
+
 	public List<Adoption> getAdoption(String title,String location,String type,Integer page);
-=======
+
 	public List<Adoption> getFosterage(String title,String location,String type,Integer page);
 	
 	@Select("select * from Adoption where aID = #{id}")
@@ -34,6 +34,5 @@ public interface AdoptionListMapper {
 	@Insert("insert into Apply (aID,applier)values(#{aID},#{uID})")
 	public Integer addOffer(Integer aID,Integer uID);
 
-	
->>>>>>> 50e572041566499252e052505228275ff5166cc4
+
 }
