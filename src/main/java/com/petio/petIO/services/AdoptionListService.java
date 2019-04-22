@@ -12,7 +12,7 @@ public class AdoptionListService {
 	@Autowired
 	private AdoptionListMapper mapper;
 	public List<Adoption> doFiler(String searchText,String regionSelect,String kindSelect,Integer page) {
-		List<Adoption> rawList = mapper.getFosterage(searchText,regionSelect, kindSelect,page);
+		List<Adoption> rawList = mapper.getAdoption(searchText,regionSelect, kindSelect,page);
 		System.out.println("size"+rawList.size());
 		return rawList;
 	}

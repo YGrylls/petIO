@@ -15,5 +15,5 @@ public interface AdoptionListMapper {
 	public Integer getTotalNumber(String title,String location,String type);
 	
 	@SelectProvider(type=SqlProvider.class,method="getAdoption")
-	public List<Adoption> getFosterage(String title,String location,String type,Integer page);
+	public List<Adoption> getAdoption(String title,String location,String type,Integer page);
 }
