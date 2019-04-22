@@ -34,11 +34,22 @@ public class AdoptionListService {
 		return false;
 	}
 	
-	public Integer addOffer(Integer aID,Integer uID){
-		return mapper.addOffer(aID, uID);
+	public Integer addApply(Integer aID,Integer uID){
+		return mapper.addApply(aID, uID);
 	}
 	
-	public Integer addApplyTimes(Integer aID,Integer uID) {
+	public Integer addApplyTimes(Integer uID) {
+		if(mapper.getApplyTimes(uID) > 0) {
+			mapper.updateApplyTimes(uID);
+		}
+		else {
+			mapper.addApplyTimes(uID);
+		}
 		return 1;
 	}
+	
+	public void initApplyTimes() {
+		mapper.initApplyTimes();
+	}
+	
 }
