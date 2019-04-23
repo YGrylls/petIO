@@ -14,7 +14,7 @@ public class Adoption {
 	private int aRead;
 	private Date startDate;
 	private int aState;   //状态
-	private String aSex;  //性别
+	private int aSex;  //性别
 	private int aMoney;   //金额
 	private String aDetailInfo;  //详细信息
 	private boolean isFree;  //是否免费
@@ -85,12 +85,7 @@ public class Adoption {
 	public void setImgPaths(List<String> imgPaths) {
 		this.imgPaths = imgPaths;
 	}
-	public String getaSex() {
-		return aSex;
-	}
-	public void setaSex(String aSex) {
-		this.aSex = aSex;
-	}
+	
 	public int getaMoney() {
 		return aMoney;
 	}
@@ -115,6 +110,12 @@ public class Adoption {
 				+ location + ", aText=" + aText + ", publishDate=" + publishDate + ", aRead=" + aRead + ", startDate="
 				+ startDate + ", aState=" + aState + ", aSex=" + aSex + ", aMoney=" + aMoney + ", aDetailInfo="
 				+ aDetailInfo + ", isFree=" + isFree + ", imgPaths=" + imgPaths + "]";
+	}
+	public int getaSex() {
+		return aSex;
+	}
+	public void setaSex(int aSex) {
+		this.aSex = aSex;
 	}
 
 	
