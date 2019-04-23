@@ -20,4 +20,7 @@ public class UserService {
 		return userMapper.add(user);
 	}
 	
+	public Integer getUidByName(String username) {
+		return userMapper.getUidByName(username);
+	}
 }

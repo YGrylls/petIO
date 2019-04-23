@@ -1,5 +1,7 @@
 package com.petio.petIO.controllers;
 
+import java.util.regex.Pattern;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,7 +71,18 @@ public class LoginController {
 		if (user != null) {
 			return ResultFactory.buildFailResult("用户已存在");
 		}
-
+		
+		if (signupInfoVo.getUsername().length() > 16 || signupInfoVo.getUsername().isEmpty()
+				|| signupInfoVo.getPassword().length() > 16 || signupInfoVo.getPassword().isEmpty()
+				|| signupInfoVo.getUserTel().length() > 16 || signupInfoVo.getUserTel().isEmpty()) {
+			return ResultFactory.buildFailResult("长度需要在1-16以内");
+		}
+		if (!Pattern.matches(
+				"^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$",
+				signupInfoVo.getUserTel())) {
+			return ResultFactory.buildFailResult("电话号码不符合规范");
+		}
+		
 		User user2 = new User(signupInfoVo.getUsername(), signupInfoVo.getPassword(), signupInfoVo.getUserTel(), 0);
 		userService.add(user2);
 		return ResultFactory.buildSuccessResult("注册成功");

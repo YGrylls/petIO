@@ -67,11 +67,9 @@ public class AdoptionController {
 	@ResponseBody
 	public Result getDetail(@RequestBody Integer id, BindingResult bindingResult) {
 		Adoption adoption = adoptionListService.getAdoptionByID(id);
-		if(adoption == null)return ResultFactory.buildFailResult("未找到用户");
+		if(adoption == null)return ResultFactory.buildFailResult("未找到帖子");
 		
 		adoption.setImgPaths(utils.getImgPaths(id));   //获取图片路径，暂时没实现
-		
-		
 		
 		return ResultFactory.buildSuccessResult(adoption);
 	}
@@ -80,9 +78,11 @@ public class AdoptionController {
 	@RequestMapping(value = "/api/adoption/apply", method = RequestMethod.POST)
 	@ResponseBody
 	public Result Apply(@RequestBody Integer id,
-			BindingResult bindingResult) {
+			BindingResult bindingResult, HttpServletRequest request) {
 		
-		int uid = 1;   //通过session获取用户id
+		int uid = utils.getUidByCookie(request);   //通过Cookie获取用户id
+		if(uid == -1)return ResultFactory.buildFailResult("申请失败，您未登录");
+		
 		int times = adoptionListService.getApplyTimes(uid);  //获取用户当前申请次数 
 		if(times > 3)return ResultFactory.buildFailResult("超过今日申请次数！");
 		

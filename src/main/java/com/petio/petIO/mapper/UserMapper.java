@@ -11,6 +11,9 @@ public interface UserMapper {
 
 	@Select("select username,password,userTel,userScore from User where username = #{username}")
 	public User getUserByName(String username);
+	
+	@Select("select userID from User where username = #{username}")
+	public Integer getUidByName(String username);
 
 	@Insert("insert into User (username,password,userTel,userScore)values(#{username},#{password},#{userTel},#{userScore})")
 	public Integer add(User user);
