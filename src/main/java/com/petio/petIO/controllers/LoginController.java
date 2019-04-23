@@ -45,6 +45,7 @@ public class LoginController {
 		User user = userService.getUserByName(loginInfoVo.getUsername());
 //		String password = Encoder.encryptBasedDes(loginInfoVo.getPassword());
 		String password = loginInfoVo.getPassword();
+		System.out.println("---" + password + "-----");
 		if (user != null && user.getPassword().equals(password)) {
 
 			HttpSession session = request.getSession();
@@ -71,7 +72,7 @@ public class LoginController {
 		if (user != null) {
 			return ResultFactory.buildFailResult("用户已存在");
 		}
-		
+
 		if (signupInfoVo.getUsername().length() > 16 || signupInfoVo.getUsername().isEmpty()
 				|| signupInfoVo.getPassword().length() > 16 || signupInfoVo.getPassword().isEmpty()
 				|| signupInfoVo.getUserTel().length() > 16 || signupInfoVo.getUserTel().isEmpty()) {
@@ -82,7 +83,7 @@ public class LoginController {
 				signupInfoVo.getUserTel())) {
 			return ResultFactory.buildFailResult("电话号码不符合规范");
 		}
-		
+
 		User user2 = new User(signupInfoVo.getUsername(), signupInfoVo.getPassword(), signupInfoVo.getUserTel(), 0);
 		userService.add(user2);
 		return ResultFactory.buildSuccessResult("注册成功");
