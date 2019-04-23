@@ -30,12 +30,12 @@ public class LoginController {
 
 	@Autowired
 	UserRedisService userRedisService;
-	
+
 	@CrossOrigin
 	@RequestMapping(value = "/api/login", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public Result login(@Valid @RequestBody LoginInfo loginInfoVo, BindingResult bindingResult,HttpServletRequest request,
-			HttpServletResponse response) {
+	public Result login(@Valid @RequestBody LoginInfo loginInfoVo, BindingResult bindingResult,
+			HttpServletRequest request, HttpServletResponse response) {
 		if (bindingResult.hasErrors()) {
 			String message = String.format("登陆失败，详细信息[%s]。", bindingResult.getFieldError().getDefaultMessage());
 			return ResultFactory.buildFailResult(message);
@@ -44,16 +44,16 @@ public class LoginController {
 //		String password = Encoder.encryptBasedDes(loginInfoVo.getPassword());
 		String password = loginInfoVo.getPassword();
 		if (user != null && user.getPassword().equals(password)) {
-			
+
 			HttpSession session = request.getSession();
 			String sessionId = session.getId();
 			userRedisService.addUserSession(user.getUsername() + "_" + password, sessionId);
-			
+
 			Cookie cookie = new Cookie("loginStatus", user.getUsername() + "_" + password);
 			cookie.setPath("/");
 			cookie.setMaxAge(3600);
 			response.addCookie(cookie);
-			
+
 			return ResultFactory.buildSuccessResult("登陆成功。");
 		}
 		String message = String.format("登陆失败，详细信息[用户名、密码信息不正确]。");
@@ -69,7 +69,7 @@ public class LoginController {
 		if (user != null) {
 			return ResultFactory.buildFailResult("用户已存在");
 		}
-		
+
 		User user2 = new User(signupInfoVo.getUsername(), signupInfoVo.getPassword(), signupInfoVo.getUserTel(), 0);
 		userService.add(user2);
 		return ResultFactory.buildSuccessResult("注册成功");
