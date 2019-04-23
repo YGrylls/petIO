@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.petio.petIO.Utils.AuthCheck;
 import com.petio.petIO.Utils.GeneralUtils;
 import com.petio.petIO.Utils.ResultFactory;
 import com.petio.petIO.beans.Adoption;
+import com.petio.petIO.beans.AdoptionInfo;
 import com.petio.petIO.beans.ListData;
 import com.petio.petIO.beans.Result;
 import com.petio.petIO.beans.SearchInfo;
@@ -45,17 +45,21 @@ public class AdoptionController {
 			HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("searchText :" + searchInfoVo.getSearchText() + ", regionSelect : "
 				+ searchInfoVo.getRegionSelect() + ", kindSelect : " + searchInfoVo.getKindSelect());
-		boolean isAuth = AuthCheck.isAuth(request, response, redisService, userService);
-		if (!isAuth) {
-			String message = String.format("未登录或登录失效");
-			return ResultFactory.buildAuthFailResult(message);
-		}
+//		boolean isAuth = AuthCheck.isAuth(request, response, redisService, userService);
+//		if (!isAuth) {
+//			String message = String.format("未登录或登录失效");
+//			return ResultFactory.buildAuthFailResult(message);
+//		}
 		int number = adoptionListService.getTotalNumber(searchInfoVo.getSearchText(), searchInfoVo.getRegionSelect(),
 				searchInfoVo.getKindSelect());
-		List<Adoption> adoptionList = adoptionListService.doFiler(searchInfoVo.getSearchText(),
+		List<AdoptionInfo> adoptionList = adoptionListService.doFiler(searchInfoVo.getSearchText(),
 				searchInfoVo.getRegionSelect(), searchInfoVo.getKindSelect(), searchInfoVo.getPage());
 		System.out.println(number);
-		return ResultFactory.buildSuccessResult(new ListData(number, adoptionList));
+		int pages = number/20;
+		if (number%20 > 0) {
+			pages = pages+1;
+		}
+		return ResultFactory.buildSuccessResult(new ListData(pages, adoptionList));
 	}
 
 	@CrossOrigin

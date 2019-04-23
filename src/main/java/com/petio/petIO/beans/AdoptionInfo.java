@@ -3,9 +3,9 @@ package com.petio.petIO.beans;
 import java.sql.Date;
 import java.util.List;
 
-public class Adoption {
+public class AdoptionInfo {
 	private int aID;
-	private int editor;
+	private String editor;
 	private String aTitle;
 	private String aType;
 	private String location;
@@ -21,10 +21,10 @@ public class Adoption {
 	public void setaID(int aID) {
 		this.aID = aID;
 	}
-	public int getEditor() {
+	public String getEditor() {
 		return editor;
 	}
-	public void setEditor(int editor) {
+	public void setEditor(String editor) {
 		this.editor = editor;
 	}
 	public String getaTitle() {
@@ -81,6 +81,19 @@ public class Adoption {
 	public void setImgPaths(List<String> imgPaths) {
 		this.imgPaths = imgPaths;
 	}
-
-	
+	public AdoptionInfo(int aID, String editor, String aTitle, String aType, String location, String aText,
+			Date publishDate, int aRead, Date startDate, int aState, List<String> imgPaths) {
+		super();
+		this.aID = aID;
+		this.editor = editor;
+		this.aTitle = aTitle;
+		this.aType = aType;
+		this.location = location;
+		this.aText = aText;
+		this.publishDate = publishDate;
+		this.aRead = aRead;
+		this.startDate = startDate;
+		this.aState = aState;
+		this.imgPaths = imgPaths;
+	}
 }
