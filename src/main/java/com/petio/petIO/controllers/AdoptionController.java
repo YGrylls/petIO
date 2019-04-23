@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.petio.petIO.Utils.GeneralUtils;
 import com.petio.petIO.Utils.ResultFactory;
-import com.petio.petIO.beans.AdopID;
 import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.AdoptionInfo;
 import com.petio.petIO.beans.ListData;
@@ -90,9 +89,14 @@ public class AdoptionController {
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption/apply", method = RequestMethod.POST)
 	@ResponseBody
-	public Result Apply(@PathVariable("id") Integer id, HttpServletRequest request) {
-
-		int uid = utils.getUidByCookie(request); // 通过Cookie获取用户id
+	public Result Apply(@RequestParam("id") Integer id, HttpServletRequest request) {
+		System.out.println("id:"+id);
+		int uid = -1; // 通过Cookie获取用户id
+		try {
+			uid = utils.getUidByCookie(request);
+		}catch (Exception e) {
+			System.out.println("fuck:"+e.getMessage());
+		}
 		if (uid == -1)
 			return ResultFactory.buildFailResult("申请失败，您未登录");
 
