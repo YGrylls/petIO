@@ -109,6 +109,13 @@ public class Adoption {
 	public void setFree(boolean isFree) {
 		this.isFree = isFree;
 	}
+	@Override
+	public String toString() {
+		return "Adoption [aID=" + aID + ", editor=" + editor + ", aTitle=" + aTitle + ", aType=" + aType + ", location="
+				+ location + ", aText=" + aText + ", publishDate=" + publishDate + ", aRead=" + aRead + ", startDate="
+				+ startDate + ", aState=" + aState + ", aSex=" + aSex + ", aMoney=" + aMoney + ", aDetailInfo="
+				+ aDetailInfo + ", isFree=" + isFree + ", imgPaths=" + imgPaths + "]";
+	}
 
 	
 }

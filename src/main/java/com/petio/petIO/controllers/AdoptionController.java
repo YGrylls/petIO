@@ -1,21 +1,27 @@
 package com.petio.petIO.controllers;
 
+import static org.hamcrest.CoreMatchers.nullValue;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.petio.petIO.Utils.GeneralUtils;
 import com.petio.petIO.Utils.ResultFactory;
+import com.petio.petIO.beans.AdopID;
 import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.AdoptionInfo;
 import com.petio.petIO.beans.ListData;
@@ -65,14 +71,18 @@ public class AdoptionController {
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption/detail/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public Result getDetail(@RequestBody Integer id, BindingResult bindingResult) {
+	public Result getDetail(@PathVariable("id") Integer id) {
+		System.out.println("id:"+id);
 		Adoption adoption = adoptionListService.getAdoptionByID(id);
+		System.out.println(adoption);
 		if (adoption == null)
 			return ResultFactory.buildFailResult("未找到帖子");
 
 		if(adoption.getaMoney() == 0)adoption.setFree(true);
 		else adoption.setFree(false);
-		adoption.setImgPaths(utils.getImgPaths(id)); // 获取图片路径，暂时没实现
+		//adoption.setImgPaths(utils.getImgPaths(id)); // 获取图片路径，暂时没实现
+		
+		System.out.println(adoption);
 
 		return ResultFactory.buildSuccessResult(adoption);
 	}
@@ -80,7 +90,7 @@ public class AdoptionController {
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption/apply", method = RequestMethod.POST)
 	@ResponseBody
-	public Result Apply(@RequestBody Integer id, BindingResult bindingResult, HttpServletRequest request) {
+	public Result Apply(@PathVariable("id") Integer id, HttpServletRequest request) {
 
 		int uid = utils.getUidByCookie(request); // 通过Cookie获取用户id
 		if (uid == -1)
