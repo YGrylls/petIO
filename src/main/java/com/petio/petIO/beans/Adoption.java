@@ -6,14 +6,18 @@ import java.util.List;
 public class Adoption {
 	private int aID;
 	private int editor;
-	private String aTitle;
-	private String aType;
-	private String location;
-	private String aText;
+	private String aTitle;   //标题
+	private String aType;    //类型
+	private String location; //地点
+	private String aText;    //简介
 	private Date publishDate;
 	private int aRead;
 	private Date startDate;
-	private int aState;
+	private int aState;   //状态
+	private String aSex;  //性别
+	private int aMoney;   //金额
+	private String aDetailInfo;  //详细信息
+	private boolean isFree;  //是否免费
 	private List<String>imgPaths;
 	public int getaID() {
 		return aID;
@@ -80,6 +84,30 @@ public class Adoption {
 	}
 	public void setImgPaths(List<String> imgPaths) {
 		this.imgPaths = imgPaths;
+	}
+	public String getaSex() {
+		return aSex;
+	}
+	public void setaSex(String aSex) {
+		this.aSex = aSex;
+	}
+	public int getaMoney() {
+		return aMoney;
+	}
+	public void setaMoney(int aMoney) {
+		this.aMoney = aMoney;
+	}
+	public String getaDetailInfo() {
+		return aDetailInfo;
+	}
+	public void setaDetailInfo(String aDetailInfo) {
+		this.aDetailInfo = aDetailInfo;
+	}
+	public boolean isFree() {
+		return isFree;
+	}
+	public void setFree(boolean isFree) {
+		this.isFree = isFree;
 	}
 
 	

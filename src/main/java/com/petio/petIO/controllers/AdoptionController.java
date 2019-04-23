@@ -70,6 +70,8 @@ public class AdoptionController {
 		if (adoption == null)
 			return ResultFactory.buildFailResult("未找到帖子");
 
+		if(adoption.getaMoney() == 0)adoption.setFree(true);
+		else adoption.setFree(false);
 		adoption.setImgPaths(utils.getImgPaths(id)); // 获取图片路径，暂时没实现
 
 		return ResultFactory.buildSuccessResult(adoption);
