@@ -69,7 +69,8 @@ public class AdoptionDetailController {
 			adoptionService.addApply(id, uid);
 			adoptionService.addApplyTimes(uid); // 增加今日申请次数
 		}	
-		ConnectInfo connectInfo = userService.getConnectionByID(uid);
+		Adoption adoption = adoptionService.getAdoptionByID(id);
+		ConnectInfo connectInfo = userService.getConnectionByID(adoption.getEditor());
 			
 		return ResultFactory.buildSuccessResult(connectInfo);
 	}
