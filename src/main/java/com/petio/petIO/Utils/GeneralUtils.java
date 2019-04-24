@@ -22,8 +22,8 @@ public class GeneralUtils {
 	// 通过cookie获得用户id
 	public static Integer getUidByCookie(HttpServletRequest request) {
 		UserService userService = new UserService();
+
 		if(request == null)return -1;
-		
 		String username = "";
 		Cookie[] cookies = request.getCookies();
 		if (null != cookies) {
@@ -38,9 +38,12 @@ public class GeneralUtils {
 					}
 				}
 			}
+		}
+		if(!username.equals("")) {
+			System.out.println("aaa");
 			return userService.getUidByName(username);
 		}
-		else return -1;
+		return -1;
 	}
 	
 }
