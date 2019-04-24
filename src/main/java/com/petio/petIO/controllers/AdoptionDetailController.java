@@ -54,7 +54,7 @@ public class AdoptionDetailController {
 		System.out.println("id:"+id);
 		int uid = -1; // 通过Cookie获取用户id
 		try {
-			uid = GeneralUtils.getUidByCookie(request);
+			uid = GeneralUtils.getUidByCookie(request,userService);
 		}catch (Exception e) {
 			System.out.println("fuck:"+e.getMessage());
 		}

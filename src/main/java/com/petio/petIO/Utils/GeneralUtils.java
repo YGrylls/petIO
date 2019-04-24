@@ -20,8 +20,7 @@ public class GeneralUtils {
 	}
 	
 	// 通过cookie获得用户id
-	public static Integer getUidByCookie(HttpServletRequest request) {
-		UserService userService = new UserService();
+	public static Integer getUidByCookie(HttpServletRequest request, UserService userService) {
 
 		if(request == null)return -1;
 		String username = "";
@@ -43,6 +42,7 @@ public class GeneralUtils {
 			System.out.println("aaa");
 			return userService.getUidByName(username);
 		}
+		System.out.println("bbb");
 		return -1;
 	}
 	
