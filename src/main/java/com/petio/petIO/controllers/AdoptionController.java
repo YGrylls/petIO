@@ -41,7 +41,7 @@ public class AdoptionController {
 
 	@Autowired
 	private UserService userService;
-	private GeneralUtils utils;
+	
 
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption", method = RequestMethod.POST)
@@ -65,51 +65,5 @@ public class AdoptionController {
 			pages = pages+1;
 		}
 		return ResultFactory.buildSuccessResult(new ListData(pages, adoptionList));
-	}
-
-	@CrossOrigin
-	@RequestMapping(value = "/api/adoption/detail/{id}", method = RequestMethod.POST)
-	@ResponseBody
-	public Result getDetail(@PathVariable("id") Integer id) {
-		System.out.println("id:"+id);
-		Adoption adoption = adoptionListService.getAdoptionByID(id);
-		System.out.println(adoption);
-		if (adoption == null)
-			return ResultFactory.buildFailResult("未找到帖子");
-
-		if(adoption.getaMoney() == 0)adoption.setFree(true);
-		else adoption.setFree(false);
-		//adoption.setImgPaths(utils.getImgPaths(id)); // 获取图片路径，暂时没实现
-		
-		System.out.println(adoption);
-
-		return ResultFactory.buildSuccessResult(adoption);
-	}
-
-	@CrossOrigin
-	@RequestMapping(value = "/api/adoption/apply", method = RequestMethod.POST)
-	@ResponseBody
-	public Result Apply(@RequestParam("id") Integer id, HttpServletRequest request) {
-		System.out.println("id:"+id);
-		int uid = -1; // 通过Cookie获取用户id
-		try {
-			uid = utils.getUidByCookie(request);
-		}catch (Exception e) {
-			System.out.println("fuck:"+e.getMessage());
-		}
-		if (uid == -1)
-			return ResultFactory.buildFailResult("申请失败，您未登录");
-
-		int times = adoptionListService.getApplyTimes(uid); // 获取用户当前申请次数
-		if (times > 3)
-			return ResultFactory.buildFailResult("超过今日申请次数！");
-
-		if (!adoptionListService.checkApply(id, uid)) { // 没申请过
-			adoptionListService.addApply(id, uid);
-			adoptionListService.addApplyTimes(uid); // 增加今日申请次数
-			return ResultFactory.buildSuccessResult("申请成功！");
-		} else {
-			return ResultFactory.buildSuccessResult("您已申请过！");
-		}
 	}
 }

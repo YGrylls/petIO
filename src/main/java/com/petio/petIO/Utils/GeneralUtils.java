@@ -12,17 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.petio.petIO.services.UserService;
 
 public class GeneralUtils {
-	@Autowired 
-	UserService userService;
 	
 	// 获取图片路径
-	public List<String> getImgPaths(int id) {  
+	public static List<String> getImgPaths(int id) {  
 		List<String> imgPaths = new ArrayList<>();
 		return imgPaths;
 	}
 	
 	// 通过cookie获得用户id
-	public Integer getUidByCookie(HttpServletRequest request) {
+	public static Integer getUidByCookie(HttpServletRequest request) {
+		UserService userService = new UserService();
 		
 		String username = "";
 		Cookie[] cookies = request.getCookies();
