@@ -14,13 +14,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.petio.petIO.Utils.GeneralUtils;
 import com.petio.petIO.Utils.ResultFactory;
 import com.petio.petIO.beans.Adoption;
+import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.beans.Result;
+import com.petio.petIO.beans.User;
 import com.petio.petIO.services.AdoptionService;
+import com.petio.petIO.services.UserService;
 
 @Controller
 public class AdoptionDetailController {
 	@Autowired
 	AdoptionService adoptionService;
+	
+	@Autowired
+	UserService userService;
 	
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption/detail/{id}", method = RequestMethod.POST)
@@ -62,9 +68,9 @@ public class AdoptionDetailController {
 		if (!adoptionService.checkApply(id, uid)) { // 没申请过
 			adoptionService.addApply(id, uid);
 			adoptionService.addApplyTimes(uid); // 增加今日申请次数
-			return ResultFactory.buildSuccessResult("申请成功！");
-		} else {
-			return ResultFactory.buildSuccessResult("您已申请过！");
-		}
+		}	
+		ConnectInfo connectInfo = userService.getConnectionByID(uid);
+			
+		return ResultFactory.buildSuccessResult(connectInfo);
 	}
 }

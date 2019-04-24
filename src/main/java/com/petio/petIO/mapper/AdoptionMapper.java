@@ -14,10 +14,13 @@ public interface AdoptionMapper {
 	public Adoption getAdoptionByID(Integer id);
 	
 	@Select("select count(*) from Apply where aID = #{aID} and applier = #{uID}")
-	public Integer getApply(Integer aID, Integer uID);
+	public Integer checkApply(Integer aID, Integer uID);
 	
 	@Insert("insert into Apply (aID,applier)values(#{aID},#{uID})")
 	public Integer addApply(Integer aID,Integer uID);
+	
+	@Select("select count(*) from ApplyTimes where uID = #{uID}")
+	public Integer checkApplyTimes(Integer uID);
 	
 	@Select("select times from ApplyTimes where uID = #{uID}")
 	public Integer getApplyTimes(Integer uID);

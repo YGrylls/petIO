@@ -22,6 +22,7 @@ public class GeneralUtils {
 	// 通过cookie获得用户id
 	public static Integer getUidByCookie(HttpServletRequest request) {
 		UserService userService = new UserService();
+		if(request == null)return -1;
 		
 		String username = "";
 		Cookie[] cookies = request.getCookies();

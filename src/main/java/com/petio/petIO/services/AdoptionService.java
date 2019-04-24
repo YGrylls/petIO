@@ -16,20 +16,22 @@ public class AdoptionService {
 	}
 	
 	public Integer getApplyTimes(Integer id) {
+		if(mapper.checkApplyTimes(id) == 0)return 0;
 		return mapper.getApplyTimes(id);
 	}
 	
 	public boolean checkApply(Integer aID, Integer uID) {
-		if(mapper.getApply(aID, uID)>0)return true;
+		if(mapper.checkApply(aID, uID)>0)return true;
 		return false;
 	}
 	
 	public Integer addApply(Integer aID,Integer uID){
+		if(mapper.checkApply(aID, uID)>0)return -1;
 		return mapper.addApply(aID, uID);
 	}
 	
 	public Integer addApplyTimes(Integer uID) {
-		if(mapper.getApplyTimes(uID) > 0) {
+		if(mapper.checkApplyTimes(uID) > 0) {
 			mapper.updateApplyTimes(uID);
 		}
 		else {

@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.beans.User;
 
 @Mapper
@@ -20,4 +21,7 @@ public interface UserMapper {
 	
 	@Insert("insert into User (username,password,userTel,userScore)values(#{username},#{password},#{userTel},#{userScore})")
 	public Integer add(User user);
+	
+	@Select("select username,userTel from User where userID = #{userID}")
+	public ConnectInfo getConnectionByID(int userID);
 }
