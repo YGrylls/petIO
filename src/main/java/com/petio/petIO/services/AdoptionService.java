@@ -1,5 +1,7 @@
 package com.petio.petIO.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +44,9 @@ public class AdoptionService {
 	
 	public void initApplyTimes() {
 		mapper.initApplyTimes();
+	}
+	
+	public List<Adoption> getAdoptionsByUid(Integer uid){
+		return mapper.getAdoptionsByUid(uid);
 	}
 }
