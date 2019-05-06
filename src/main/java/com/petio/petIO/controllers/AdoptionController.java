@@ -1,28 +1,19 @@
 package com.petio.petIO.controllers;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.petio.petIO.Utils.GeneralUtils;
 import com.petio.petIO.Utils.ResultFactory;
 import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.AdoptionInfo;
@@ -33,7 +24,6 @@ import com.petio.petIO.beans.SearchInfo;
 import com.petio.petIO.beans.User;
 import com.petio.petIO.services.AdoptionListService;
 import com.petio.petIO.services.UploadFileService;
-import com.petio.petIO.services.UserRedisService;
 import com.petio.petIO.services.UserService;
 
 @Controller
@@ -44,9 +34,10 @@ public class AdoptionController {
 
 	@Autowired
 	private UploadFileService uploadFileService;
-	
+
 	@Autowired
 	private UserService userService;
+
 //	@CrossOrigin
 //	@RequestMapping(value = "/api/upload", method = RequestMethod.POST)
 //	@ResponseBody
@@ -63,19 +54,14 @@ public class AdoptionController {
 	@CrossOrigin
 	@RequestMapping(value = "/api/new", method = RequestMethod.POST)
 	@ResponseBody
-	public Result addNewAdoption(@RequestBody NewAdoptionInfo newAdoptionInfo,HttpServletRequest request,
+	public Result addNewAdoption(@RequestBody NewAdoptionInfo newAdoptionInfo, HttpServletRequest request,
 			HttpServletResponse response) {
 //		userService.isAuth(request, response);
 		User user = userService.getCurrentUser(request, response);
-		if (null!=user) {
-			
+		if (null != user) {
 			Adoption newAdoption = new Adoption(userService.getUidByName(user.getUsername()),
-					newAdoptionInfo.getTitle(),
-					newAdoptionInfo.getType(), 
-					newAdoptionInfo.getLocation(), 
-					newAdoptionInfo.getDetail(), 
-					newAdoptionInfo.getSex(), 
-					newAdoptionInfo.getCost(), 
+					newAdoptionInfo.getTitle(), newAdoptionInfo.getType(), newAdoptionInfo.getLocation(),
+					newAdoptionInfo.getDetail(), newAdoptionInfo.getSex(), newAdoptionInfo.getCost(),
 					newAdoptionInfo.getRequirements());
 			if (adoptionListService.addNewAdoption(newAdoption)) {
 				return ResultFactory.buildSuccessResult("create successfully");
@@ -84,6 +70,7 @@ public class AdoptionController {
 		}
 		return ResultFactory.buildAuthFailResult("Auth expire");
 	}
+
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption", method = RequestMethod.POST)
 	@ResponseBody
@@ -101,9 +88,9 @@ public class AdoptionController {
 		List<AdoptionInfo> adoptionList = adoptionListService.doFiler(searchInfoVo.getSearchText(),
 				searchInfoVo.getRegionSelect(), searchInfoVo.getKindSelect(), searchInfoVo.getPage());
 		System.out.println(number);
-		int pages = number/20;
-		if (number%20 > 0) {
-			pages = pages+1;
+		int pages = number / 20;
+		if (number % 20 > 0) {
+			pages = pages + 1;
 		}
 		return ResultFactory.buildSuccessResult(new ListData(pages, adoptionList));
 	}
