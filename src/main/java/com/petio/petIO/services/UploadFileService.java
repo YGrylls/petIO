@@ -22,7 +22,7 @@ public class UploadFileService {
         }
         String suffix = file.getOriginalFilename();
         String prefix = suffix.substring(suffix.lastIndexOf(".")+1);
-        fileName+=prefix;
+        fileName+=('.'+prefix);
         try {
 			File path = new File(ResourceUtils.getURL("classpath:").getPath());
 			if (!path.exists()) {

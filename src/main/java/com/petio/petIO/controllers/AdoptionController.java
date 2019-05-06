@@ -64,7 +64,9 @@ public class AdoptionController {
 					newAdoptionInfo.getDetail(), newAdoptionInfo.getSex(), newAdoptionInfo.getCost(),
 					newAdoptionInfo.getRequirements());
 			if (adoptionListService.addNewAdoption(newAdoption)) {
-				return ResultFactory.buildSuccessResult("create successfully");
+				int newID = adoptionListService.getMaxID();
+				adoptionListService.addImages(newID, newAdoptionInfo.getImgUrl());
+				return ResultFactory.buildSuccessResult(newID);
 			}
 			return ResultFactory.buildFailResult("error");
 		}
