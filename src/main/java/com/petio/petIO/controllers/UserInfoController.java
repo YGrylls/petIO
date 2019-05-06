@@ -116,14 +116,8 @@ public class UserInfoController {
 		Adoption adoption = adoptionService.getAdoptionByID(id);
 		System.out.println(adoption);
 		
-		System.out.println(adoption.getExpireDate());
-		System.out.println(adoption.getExpireDate().getTime());
-		
 		Date date = new Date();
-		System.out.println(date);
-		System.out.println(date.getTime());
-		
-		//if(adoption.getExpireDate().getTime() < date.getTime())return ResultFactory.buildFailResult("续期失败，已过期！");
+		if(adoption.getExpireDate().getTime() < date.getTime())return ResultFactory.buildFailResult("续期失败，已过期！");
 		
 		long day = (adoption.getExpireDate().getTime() - date.getTime())/(24*3600*1000);
 		
