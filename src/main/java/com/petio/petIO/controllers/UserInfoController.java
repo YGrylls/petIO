@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.petio.petIO.Utils.GeneralUtils;
 import com.petio.petIO.Utils.ResultFactory;
+import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.beans.PasswordInfo;
 import com.petio.petIO.beans.Result;
+import com.petio.petIO.beans.User;
 import com.petio.petIO.services.UserService;
 
 @Controller
@@ -49,4 +51,26 @@ public class UserInfoController {
 		
 		return ResultFactory.buildSuccessResult("修改成功");
 	}
+	
+	@CrossOrigin
+	@RequestMapping(value = "/api/userinfo/info", method = RequestMethod.GET)
+	@ResponseBody
+	public Result userInfo(HttpServletRequest request, HttpServletResponse response) {
+		
+		int uid = -1; 
+		try {
+			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+		} catch (Exception e) {
+			System.out.println("fuck:" + e.getMessage());
+			e.printStackTrace();
+		}
+		if (uid == -1)
+			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
+		
+		ConnectInfo connectInfo = userService.getConnectionByID(uid);
+		
+		return ResultFactory.buildSuccessResult(connectInfo);
+	}
+	
+	
 }
