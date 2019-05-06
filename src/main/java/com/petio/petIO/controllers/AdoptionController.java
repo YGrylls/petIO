@@ -2,6 +2,7 @@ package com.petio.petIO.controllers;
 
 import static org.hamcrest.CoreMatchers.nullValue;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.petio.petIO.Utils.GeneralUtils;
 import com.petio.petIO.Utils.ResultFactory;
@@ -27,6 +30,7 @@ import com.petio.petIO.beans.ListData;
 import com.petio.petIO.beans.Result;
 import com.petio.petIO.beans.SearchInfo;
 import com.petio.petIO.services.AdoptionListService;
+import com.petio.petIO.services.UploadFileService;
 import com.petio.petIO.services.UserRedisService;
 import com.petio.petIO.services.UserService;
 
@@ -40,9 +44,29 @@ public class AdoptionController {
 	private UserRedisService redisService;
 
 	@Autowired
-	private UserService userService;
+	private UploadFileService uploadFileService;
 	
-
+	@Autowired
+	private UserService userService;
+	@CrossOrigin
+	@RequestMapping(value = "/api/upload", method = RequestMethod.POST)
+	@ResponseBody
+	public Result uploadFiles(@RequestParam("imgInput") MultipartFile[] files) {
+		boolean flag = true;
+		for (int i = 0; i < files.length; i++) {
+			flag&=uploadFileService.getUploadFilePath(files[0], String.valueOf(i));
+		}
+		if (flag) {
+			return ResultFactory.buildSuccessResult("Upload Successfully");
+		} 
+		return ResultFactory.buildFailResult("Upload Fail");
+	}
+	@CrossOrigin
+	@RequestMapping(value = "/api/new", method = RequestMethod.POST)
+	@ResponseBody
+	public Result addNewAdoption() {
+		return ResultFactory.buildFailResult("create Fail");
+	}
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption", method = RequestMethod.POST)
 	@ResponseBody
