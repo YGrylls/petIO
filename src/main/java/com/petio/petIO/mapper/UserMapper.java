@@ -3,6 +3,7 @@ package com.petio.petIO.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.beans.User;
@@ -24,4 +25,10 @@ public interface UserMapper {
 	
 	@Select("select username,userTel from User where userID = #{userID}")
 	public ConnectInfo getConnectionByID(int userID);
+	
+	@Select("select count(*) from User where userID = #{uid} and password = #{password}")
+	public Integer CheckPassword(int uid, String password);
+	
+	@Update("update User set password = #{newpass} where userID = #{uid}")
+	public Integer updatePassword(Integer uid,String newpass);
 }
