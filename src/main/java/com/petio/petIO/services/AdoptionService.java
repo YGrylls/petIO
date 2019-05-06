@@ -1,5 +1,6 @@
 package com.petio.petIO.services;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,9 @@ public class AdoptionService {
 	
 	public List<Adoption> getAdoptionsByUid(Integer uid){
 		return mapper.getAdoptionsByUid(uid);
+	}
+	
+	public Integer delayDate(Integer aid, Date date) {
+		return mapper.delayDate(aid, date);
 	}
 }

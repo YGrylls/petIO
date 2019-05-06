@@ -1,5 +1,6 @@
 package com.petio.petIO.mapper;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Insert;
@@ -38,4 +39,7 @@ public interface AdoptionMapper {
 	
 	@Select("select * from Adoption where editor = #{uid}")
 	public List<Adoption> getAdoptionsByUid(Integer uid);
+	
+	@Update("update Adoption set expireDate = #{date} where aID = #{aid}")
+	public Integer delayDate(Integer aid, Date date);
 }

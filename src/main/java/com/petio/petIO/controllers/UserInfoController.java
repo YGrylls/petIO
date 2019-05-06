@@ -1,5 +1,7 @@
 package com.petio.petIO.controllers;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -104,4 +107,39 @@ public class UserInfoController {
 		
 		return ResultFactory.buildSuccessResult(adoptions);
 	}
+	
+	@CrossOrigin
+	@RequestMapping(value = "/api/userinfo/delay/{id}", method = RequestMethod.POST)
+	@ResponseBody
+	public Result delay(@PathVariable("id") Integer id) {
+		System.out.println("id:" + id);
+		Adoption adoption = adoptionService.getAdoptionByID(id);
+		System.out.println(adoption);
+		
+		System.out.println(adoption.getExpireDate());
+		System.out.println(adoption.getExpireDate().getTime());
+		
+		Date date = new Date();
+		System.out.println(date);
+		System.out.println(date.getTime());
+		
+		//if(adoption.getExpireDate().getTime() < date.getTime())return ResultFactory.buildFailResult("续期失败，已过期！");
+		
+		long day = (adoption.getExpireDate().getTime() - date.getTime())/(24*3600*1000);
+		
+		System.out.println("天数差:"+ day);
+		
+		if(day >= 3) return ResultFactory.buildFailResult("续期失败,过期前3天内才可续期！");
+		
+		long delay = 15*24*3600*1000;
+		Date newdate = new Date(adoption.getExpireDate().getTime()+delay);
+		
+		adoptionService.delayDate(id, new java.sql.Date(newdate.getTime()));
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		System.out.println(df.format(newdate));
+		
+		return ResultFactory.buildSuccessResult(df.format(newdate));
+	}
+	
+	
 }

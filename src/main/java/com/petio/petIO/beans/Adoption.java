@@ -130,5 +130,8 @@ public class Adoption {
 		this.isFree = isFree;
 	}
 	
+	public Adoption() {
+		super();
+	}
 	
 }
