@@ -27,8 +27,10 @@ import com.petio.petIO.Utils.ResultFactory;
 import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.AdoptionInfo;
 import com.petio.petIO.beans.ListData;
+import com.petio.petIO.beans.NewAdoptionInfo;
 import com.petio.petIO.beans.Result;
 import com.petio.petIO.beans.SearchInfo;
+import com.petio.petIO.beans.User;
 import com.petio.petIO.services.AdoptionListService;
 import com.petio.petIO.services.UploadFileService;
 import com.petio.petIO.services.UserRedisService;
@@ -41,31 +43,46 @@ public class AdoptionController {
 	private AdoptionListService adoptionListService;
 
 	@Autowired
-	private UserRedisService redisService;
-
-	@Autowired
 	private UploadFileService uploadFileService;
 	
 	@Autowired
 	private UserService userService;
-	@CrossOrigin
-	@RequestMapping(value = "/api/upload", method = RequestMethod.POST)
-	@ResponseBody
-	public Result uploadFiles(@RequestParam("imgInput") MultipartFile[] files) {
-		boolean flag = true;
-		for (int i = 0; i < files.length; i++) {
-			flag&=uploadFileService.getUploadFilePath(files[0], String.valueOf(i));
-		}
-		if (flag) {
-			return ResultFactory.buildSuccessResult("Upload Successfully");
-		} 
-		return ResultFactory.buildFailResult("Upload Fail");
-	}
+//	@CrossOrigin
+//	@RequestMapping(value = "/api/upload", method = RequestMethod.POST)
+//	@ResponseBody
+//	public Result uploadFiles(@RequestParam("imgInput") MultipartFile[] files) {
+//		boolean flag = true;
+//		for (int i = 0; i < files.length; i++) {
+//			flag&=uploadFileService.getUploadFilePath(files[0], String.valueOf(i));
+//		}
+//		if (flag) {
+//			return ResultFactory.buildSuccessResult("Upload Successfully");
+//		} 
+//		return ResultFactory.buildFailResult("Upload Fail");
+//	}
 	@CrossOrigin
 	@RequestMapping(value = "/api/new", method = RequestMethod.POST)
 	@ResponseBody
-	public Result addNewAdoption() {
-		return ResultFactory.buildFailResult("create Fail");
+	public Result addNewAdoption(@RequestBody NewAdoptionInfo newAdoptionInfo,HttpServletRequest request,
+			HttpServletResponse response) {
+//		userService.isAuth(request, response);
+		User user = userService.getCurrentUser(request, response);
+		if (null!=user) {
+			
+			Adoption newAdoption = new Adoption(userService.getUidByName(user.getUsername()),
+					newAdoptionInfo.getTitle(),
+					newAdoptionInfo.getType(), 
+					newAdoptionInfo.getLocation(), 
+					newAdoptionInfo.getDetail(), 
+					newAdoptionInfo.getSex(), 
+					newAdoptionInfo.getCost(), 
+					newAdoptionInfo.getRequirements());
+			if (adoptionListService.addNewAdoption(newAdoption)) {
+				return ResultFactory.buildSuccessResult("create successfully");
+			}
+			return ResultFactory.buildFailResult("error");
+		}
+		return ResultFactory.buildAuthFailResult("Auth expire");
 	}
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption", method = RequestMethod.POST)

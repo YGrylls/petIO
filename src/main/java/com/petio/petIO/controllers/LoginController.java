@@ -30,9 +30,6 @@ public class LoginController {
 	@Autowired
 	UserService userService;
 
-	@Autowired
-	UserRedisService userRedisService;
-
 	@CrossOrigin
 	@RequestMapping(value = "/api/login", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
@@ -50,7 +47,7 @@ public class LoginController {
 
 			HttpSession session = request.getSession();
 			String sessionId = session.getId();
-			userRedisService.addUserSession(user.getUsername() + "_" + password, sessionId);
+			userService.addUserSession(user.getUsername() + "_" + password, sessionId);
 
 			Cookie cookie = new Cookie("loginStatus", user.getUsername() + "_" + password);
 			cookie.setPath("/");

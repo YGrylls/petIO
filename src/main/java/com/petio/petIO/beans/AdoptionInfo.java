@@ -12,7 +12,7 @@ public class AdoptionInfo {
 	private String aText;
 	private Date publishDate;
 	private int aRead;
-	private Date startDate;
+	private Date expireDate;
 	private int aState;
 	private List<String>imgPaths;
 	public int getaID() {
@@ -63,12 +63,7 @@ public class AdoptionInfo {
 	public void setaRead(int aRead) {
 		this.aRead = aRead;
 	}
-	public Date getStartDate() {
-		return startDate;
-	}
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
+
 	public int getaState() {
 		return aState;
 	}
@@ -81,8 +76,14 @@ public class AdoptionInfo {
 	public void setImgPaths(List<String> imgPaths) {
 		this.imgPaths = imgPaths;
 	}
+	public Date getExpireDate() {
+		return expireDate;
+	}
+	public void setExpireDate(Date expireDate) {
+		this.expireDate = expireDate;
+	}
 	public AdoptionInfo(int aID, String editor, String aTitle, String aType, String location, String aText,
-			Date publishDate, int aRead, Date startDate, int aState, List<String> imgPaths) {
+			Date publishDate, int aRead, Date expireDate, int aState, List<String> imgPaths) {
 		super();
 		this.aID = aID;
 		this.editor = editor;
@@ -92,7 +93,7 @@ public class AdoptionInfo {
 		this.aText = aText;
 		this.publishDate = publishDate;
 		this.aRead = aRead;
-		this.startDate = startDate;
+		this.expireDate = expireDate;
 		this.aState = aState;
 		this.imgPaths = imgPaths;
 	}

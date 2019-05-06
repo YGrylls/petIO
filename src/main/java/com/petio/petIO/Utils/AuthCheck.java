@@ -35,7 +35,6 @@ public class AuthCheck {
 						String[] token = cookie.getValue().split("_");
 						String username = token[0];
 						User user = userService.getUserByName(username);
-//						String password = Encoder.decryptBasedDes(token[1]);
 						String password = token[1];
 						if (!password.equals(user.getPassword())) {
 							Cookie loginStatus = new Cookie("loginStatus", null);

@@ -32,7 +32,7 @@ public class AdoptionListService {
 										adoption.getaText(), 
 										adoption.getPublishDate(), 
 										adoption.getaRead(), 
-										adoption.getStartDate(), 
+										adoption.getExpireDate(), 
 										adoption.getaState(), 
 										adoption.getImgPaths()));
 		}
@@ -40,6 +40,12 @@ public class AdoptionListService {
 	}
 	public Integer getTotalNumber(String searchText, String regionSelect, String kindSelect) {
 		return mapper.getTotalNumber(searchText, regionSelect, kindSelect);
+	}
+	public boolean  addNewAdoption(Adoption adoption) {
+		if (mapper.addNewAdoption(adoption)==1) {
+			return true;
+		}
+		return false;
 	}
 	
 }

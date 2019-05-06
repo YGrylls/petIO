@@ -12,12 +12,12 @@ public class Adoption {
 	private String aText;    //简介
 	private Date publishDate;
 	private int aRead;
-	private Date startDate;
+	private Date expireDate;
 	private int aState;   //状态
-	private int aSex;  //性别
+	private String aSex;  //性别
 	private int aMoney;   //金额
 	private String aDetailInfo;  //详细信息
-	private boolean isFree;  //是否免费
+	private boolean isFree = false;  //是否免费
 	private List<String>imgPaths;
 	public int getaID() {
 		return aID;
@@ -67,11 +67,12 @@ public class Adoption {
 	public void setaRead(int aRead) {
 		this.aRead = aRead;
 	}
-	public Date getStartDate() {
-		return startDate;
+
+	public Date getExpireDate() {
+		return expireDate;
 	}
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setExpireDate(Date expireDate) {
+		this.expireDate = expireDate;
 	}
 	public int getaState() {
 		return aState;
@@ -104,19 +105,30 @@ public class Adoption {
 	public void setFree(boolean isFree) {
 		this.isFree = isFree;
 	}
-	@Override
-	public String toString() {
-		return "Adoption [aID=" + aID + ", editor=" + editor + ", aTitle=" + aTitle + ", aType=" + aType + ", location="
-				+ location + ", aText=" + aText + ", publishDate=" + publishDate + ", aRead=" + aRead + ", startDate="
-				+ startDate + ", aState=" + aState + ", aSex=" + aSex + ", aMoney=" + aMoney + ", aDetailInfo="
-				+ aDetailInfo + ", isFree=" + isFree + ", imgPaths=" + imgPaths + "]";
-	}
-	public int getaSex() {
+	public String getaSex() {
 		return aSex;
 	}
-	public void setaSex(int aSex) {
+	public void setaSex(String aSex) {
 		this.aSex = aSex;
 	}
-
+	public Adoption(int editor, String aTitle, String aType, String location, String aText,
+			String aSex, int aMoney, String aDetailInfo) {
+		super();
+		if (aMoney == 0) {
+			isFree = true;
+		}
+		this.editor = editor;
+		this.aTitle = aTitle;
+		this.aType = aType;
+		this.location = location;
+		this.aText = aText;
+		this.aRead = aRead;
+		this.aState = aState;
+		this.aSex = aSex;
+		this.aMoney = aMoney;
+		this.aDetailInfo = aDetailInfo;
+		this.isFree = isFree;
+	}
+	
 	
 }

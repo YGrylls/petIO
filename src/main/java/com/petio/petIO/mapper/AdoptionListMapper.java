@@ -2,6 +2,7 @@ package com.petio.petIO.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
 
@@ -16,6 +17,7 @@ public interface AdoptionListMapper {
 	@SelectProvider(type = SqlProvider.class, method = "getAdoption")
 	public List<Adoption> getAdoption(String title, String location, String type, Integer page);
 
-	public List<Adoption> getFosterage(String title, String location, String type, Integer page);
+	@Insert("insert into Adoption(editor,aTitle,aType,location,aText,aSex,aMoney,aDetailInfo)values(editor,aTitle,aType,location,aText,aSex,aMoney,aDetailInfo)")
+	public Integer addNewAdoption(Adoption adoption);
 
 }
