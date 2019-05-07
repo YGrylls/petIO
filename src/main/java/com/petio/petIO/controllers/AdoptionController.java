@@ -1,7 +1,10 @@
 package com.petio.petIO.controllers;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,21 +47,15 @@ public class AdoptionController {
 	@CrossOrigin
 	@RequestMapping(value = "/api/upload", method = RequestMethod.POST)
 	@ResponseBody
-	public Result uploadFiles(@RequestParam("imgInput") MultipartFile[] files) {
-		Integer currentMaxID = adoptionListService.getMaxID();
-		int newID = 1;
-		List<String> urls = new ArrayList<String>(); 
-		if (null!=currentMaxID) {
-			newID = currentMaxID+1;
+	public Result uploadFiles(@RequestParam("imgInput") MultipartFile file) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+		String fileName = "{"+UUID.randomUUID().toString()+"}"+df.format(new Date());
+		System.out.println(fileName);
+		String newUrl = uploadFileService.getUploadFilePath(file, fileName);
+		if (null==newUrl) {
+			return ResultFactory.buildFailResult("Upload Fail");
 		}
-		for (int i = 0; i < files.length; i++) {
-			String newUrl = uploadFileService.getUploadFilePath(files[i], newID+"/"+i);
-			if (null==newUrl) {
-				return ResultFactory.buildFailResult("Upload Fail");
-			}
-			urls.add(newUrl);
-		}
-		return ResultFactory.buildSuccessResult(urls.toArray(new String[urls.size()]));
+		return ResultFactory.buildSuccessResult(newUrl);
 	}
 	@CrossOrigin
 	@RequestMapping(value = "/api/new", method = RequestMethod.POST)
