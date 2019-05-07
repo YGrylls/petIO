@@ -52,4 +52,10 @@ public interface AdoptionMapper {
 	
 	@Delete("delete from Apply where aID = #{aID}")
 	public Integer deleteApplyByid(Integer aID);
+	
+	@Delete("delete from Picture where aID = #{aID}")
+	public Integer deletePictureByid(Integer aID);
+	
+	@Select("select path from Picture where aID = #{aID}")
+	public List<String> getImgPaths(Integer aID);
 }

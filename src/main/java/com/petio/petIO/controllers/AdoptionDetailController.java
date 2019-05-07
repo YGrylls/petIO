@@ -40,7 +40,8 @@ public class AdoptionDetailController {
 			adoption.setFree(true);
 		else
 			adoption.setFree(false);
-		// adoption.setImgPaths(utils.getImgPaths(id)); // 获取图片路径，暂时没实现
+		
+		adoption.setImgPaths(adoptionService.getImgPaths(id)); // 获取图片路径
 
 		System.out.println(adoption);
 

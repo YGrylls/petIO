@@ -58,7 +58,12 @@ public class AdoptionService {
 	public Integer deleteAdoption(Integer aID) {
 		mapper.deleteActByid(aID);
 		mapper.deleteApplyByid(aID);
+		mapper.deletePictureByid(aID);
 		mapper.deleteAdoptionByid(aID);
 		return 1;
+	}
+	
+	public List<String> getImgPaths(Integer aID) {
+		return mapper.getImgPaths(aID);
 	}
 }

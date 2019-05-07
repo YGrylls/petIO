@@ -1,5 +1,9 @@
 package com.petio.petIO.controllers;
 
+import static org.assertj.core.api.Assertions.in;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -131,7 +136,7 @@ public class UserInfoController {
 				adoption.setFree(true);
 			else
 				adoption.setFree(false);
-			// adoption.setImgPaths(utils.getImgPaths(id)); // 获取图片路径，暂时没实现
+				adoption.setImgPaths(adoptionService.getImgPaths(adoption.getaID())); // 获取图片路径
 		}
 		
 		return ResultFactory.buildSuccessResult(adoptions);
@@ -168,7 +173,7 @@ public class UserInfoController {
 	@RequestMapping(value = "/api/userinfo/delete/{id}", method = RequestMethod.POST)
 	@ResponseBody
 	public Result delete(@PathVariable("id") Integer id,
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException {
 		int uid = -1; 
 		try {
 			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
@@ -183,9 +188,16 @@ public class UserInfoController {
 		if(adoption == null || adoption.getEditor() != uid)
 			return ResultFactory.buildAuthFailResult("删除失败，您无法删除他人的帖子");
 		
-		adoptionService.deleteAdoption(id);
+		List<String> imgPaths = adoptionService.getImgPaths(id);
 		
-		//删除图片，暂时没实现
+		for(String s:imgPaths) {
+			s = s.replace("http://localhost:8081/image/", "");
+			File path = new File(ResourceUtils.getURL("classpath:").getPath()+"\\static\\images\\upload\\" + s);
+			System.out.println(path.getPath());
+			path.delete();
+		}
+		
+		adoptionService.deleteAdoption(id);
 		
 		return ResultFactory.buildSuccessResult("删除成功");
 	}
