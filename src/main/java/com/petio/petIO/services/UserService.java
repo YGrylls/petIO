@@ -121,5 +121,9 @@ public class UserService {
 	public Integer updatePassword(Integer uid,String newpass) {
 		return userMapper.updatePassword(uid, newpass);
 	}
+	
+	public Integer updatePhone(Integer uid,String newphone) {
+		return userMapper.updatePhone(uid, newphone);
+	}
 
 }

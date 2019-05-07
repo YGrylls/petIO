@@ -31,4 +31,7 @@ public interface UserMapper {
 	
 	@Update("update User set password = #{newpass} where userID = #{uid}")
 	public Integer updatePassword(Integer uid,String newpass);
+	
+	@Update("update User set userTel = #{newphone} where userID = #{uid}")
+	public Integer updatePhone(Integer uid,String newphone);
 }

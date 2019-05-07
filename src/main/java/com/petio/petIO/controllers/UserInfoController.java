@@ -3,6 +3,7 @@ package com.petio.petIO.controllers;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +22,7 @@ import com.petio.petIO.Utils.ResultFactory;
 import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.beans.PasswordInfo;
+import com.petio.petIO.beans.PhoneInfo;
 import com.petio.petIO.beans.Result;
 import com.petio.petIO.beans.User;
 import com.petio.petIO.services.AdoptionService;
@@ -56,6 +58,33 @@ public class UserInfoController {
 		else {
 			return ResultFactory.buildFailResult("修改失败，旧密码不正确");
 		}
+		
+		return ResultFactory.buildSuccessResult("修改成功");
+	}
+	
+	@CrossOrigin
+	@RequestMapping(value = "/api/userinfo/changePhone", method = RequestMethod.POST)
+	@ResponseBody
+	public Result changePhone(@RequestBody PhoneInfo phoneInfo,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		int uid = -1; 
+		try {
+			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+		} catch (Exception e) {
+			System.out.println("fuck:" + e.getMessage());
+			e.printStackTrace();
+		}
+		if (uid == -1)
+			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
+		
+		if (!Pattern.matches(
+				"^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$",
+				phoneInfo.getUserTel())) {
+			return ResultFactory.buildFailResult("电话号码不符合规范");
+		}
+		
+		userService.updatePhone(uid, phoneInfo.getUserTel());
 		
 		return ResultFactory.buildSuccessResult("修改成功");
 	}
@@ -135,5 +164,29 @@ public class UserInfoController {
 		return ResultFactory.buildSuccessResult(df.format(newdate));
 	}
 	
-	
+	@CrossOrigin
+	@RequestMapping(value = "/api/userinfo/delete/{id}", method = RequestMethod.POST)
+	@ResponseBody
+	public Result delete(@PathVariable("id") Integer id,
+			HttpServletRequest request, HttpServletResponse response) {
+		int uid = -1; 
+		try {
+			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+		} catch (Exception e) {
+			System.out.println("fuck:" + e.getMessage());
+			e.printStackTrace();
+		}
+		if (uid == -1)
+			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
+		
+		Adoption adoption = adoptionService.getAdoptionByID(id);
+		if(adoption == null || adoption.getEditor() != uid)
+			return ResultFactory.buildAuthFailResult("删除失败，您无法删除他人的帖子");
+		
+		adoptionService.deleteAdoption(id);
+		
+		//删除图片，暂时没实现
+		
+		return ResultFactory.buildSuccessResult("删除成功");
+	}
 }

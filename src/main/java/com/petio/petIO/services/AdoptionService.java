@@ -54,4 +54,11 @@ public class AdoptionService {
 	public Integer delayDate(Integer aid, Date date) {
 		return mapper.delayDate(aid, date);
 	}
+	
+	public Integer deleteAdoption(Integer aID) {
+		mapper.deleteActByid(aID);
+		mapper.deleteApplyByid(aID);
+		mapper.deleteAdoptionByid(aID);
+		return 1;
+	}
 }

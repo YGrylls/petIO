@@ -3,6 +3,7 @@ package com.petio.petIO.mapper;
 import java.sql.Date;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -42,4 +43,13 @@ public interface AdoptionMapper {
 	
 	@Update("update Adoption set expireDate = #{date} where aID = #{aid}")
 	public Integer delayDate(Integer aid, Date date);
+	
+	@Delete("delete from Adoption where aID = #{aID}")
+	public Integer deleteAdoptionByid(Integer aID);
+	
+	@Delete("delete from Act where aID = #{aID}")
+	public Integer deleteActByid(Integer aID);
+	
+	@Delete("delete from Apply where aID = #{aID}")
+	public Integer deleteApplyByid(Integer aID);
 }
