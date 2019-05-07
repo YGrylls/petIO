@@ -15,8 +15,17 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class UploadFileService {
  
-
-    public boolean getUploadFilePath(MultipartFile file, String fileName ) {
+	@Value("${file.host}")
+	private String host;
+	@Value("${file.port}")
+	private String port;
+	
+	@Value("${file.imagePath}")
+	private String imagePath;
+	
+	private String http = "http://";
+	
+    public String getUploadFilePath(MultipartFile file, String fileName ) {
         if (file.isEmpty()) {
             throw new NullPointerException("文件为空");
         }
@@ -40,23 +49,25 @@ public class UploadFileService {
 	        }
 	        file.transferTo(dest);
 			String filePathNew = dest.getPath();
-			System.out.println(saveUploadFile(filePathNew));
-			return true;
+			System.out.println("save path:"+filePathNew);
+			System.out.println(saveUploadFile(fileName));
+			return saveUploadFile(fileName);
         } catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("error : "+e.getMessage());
-			return false;
+			return null;
 		}
     }
  
     private String saveUploadFile(String filePathNew) {
-        String host = null;
+        String localhost = null;
         try {
-            host = InetAddress.getLocalHost().getHostAddress();
+        	localhost = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
         	System.out.println("get server host Exception e:"+e.getMessage());
         }
-        return host+": insert record="+1+",file="+filePathNew;
+        System.out.println(localhost+": insert record="+1+",file="+filePathNew); 
+        return http+host+':'+port+imagePath+filePathNew;
     }
 }

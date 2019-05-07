@@ -22,6 +22,9 @@ public interface AdoptionListMapper {
 	@Insert("insert into Adoption(editor,aTitle,aType,location,aText,aSex,aMoney,aDetailInfo)values(#{editor},#{aTitle},#{aType},#{location},#{aText},#{aSex},#{aMoney},#{aDetailInfo})")
 	public Integer addNewAdoption(Adoption adoption);
 	
+	@Insert("insert into Adoption(aID,editor,aTitle,aType,location,aText,aSex,aMoney,aDetailInfo)values( #{1} ,#{editor},#{aTitle},#{aType},#{location},#{aText},#{aSex},#{aMoney},#{aDetailInfo})")
+	public Integer addFirstAdoption(Adoption adoption);
+	
 	@Select("SELECT max(aID) FROM Adoption")
 	public Integer getMaxID();
 	

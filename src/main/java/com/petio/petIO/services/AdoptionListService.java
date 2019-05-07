@@ -47,7 +47,13 @@ public class AdoptionListService {
 		}
 		return false;
 	}
-	public int getMaxID() {
+	public boolean  addFirstAdoption(Adoption adoption) {
+		if (mapper.addFirstAdoption(adoption)==1) {
+			return true;
+		}
+		return false;
+	}
+	public Integer getMaxID() {
 		return mapper.getMaxID();
 	}
 	public boolean addImages(Integer aID,String[] imgUrls) {

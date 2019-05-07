@@ -1,8 +1,12 @@
 package com.petio.petIO.config;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -11,9 +15,6 @@ import com.petio.petIO.web.CORSInterceptor;
 
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
-
-    @Value("${file.rootPath}")
-    private String ROOT_PATH;
 
 	@Bean
 	public CORSInterceptor getCORSInterceptor() {
@@ -29,8 +30,26 @@ public class InterceptorConfig implements WebMvcConfigurer {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		// TODO Auto-generated method stub
 //		String filePath = "file:"+ROOT_PATH+SON_PATH;
-//		registry.addResourceHandler("/img/**").addResourceLocations("file:F:/Document/petIO/target/classes/static/images/upload/");
-//		registry.addResourceHandler("img/**").addResourceLocations("classpath:/static/images/upload/");
+		String absolutePath = "file:";
+		File path;
+		try {
+			path = new File(ResourceUtils.getURL("classpath:").getPath());
+			if (!path.exists()) {
+				path = new File("");
+			}
+			System.out.println("path:"+path.getAbsolutePath());
+			File upload = new File(path.getAbsolutePath(),"static/images/upload/");
+			if (!upload.exists()) {
+				upload.mkdirs();
+			}
+			System.out.println("upload url:"+upload.getAbsolutePath());
+			absolutePath+=(upload.getAbsolutePath().replace('\\', '/')+'/');
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("absolutePath:"+absolutePath);
+		registry.addResourceHandler("/image/**").addResourceLocations(absolutePath);
 //		WebMvcConfigurer.super.addResourceHandlers(registry);
 	}
 	

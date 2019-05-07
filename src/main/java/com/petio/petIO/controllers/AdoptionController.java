@@ -1,5 +1,6 @@
 package com.petio.petIO.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.petio.petIO.Utils.ResultFactory;
 import com.petio.petIO.beans.Adoption;
@@ -38,19 +41,25 @@ public class AdoptionController {
 	@Autowired
 	private UserService userService;
 
-//	@CrossOrigin
-//	@RequestMapping(value = "/api/upload", method = RequestMethod.POST)
-//	@ResponseBody
-//	public Result uploadFiles(@RequestParam("imgInput") MultipartFile[] files) {
-//		boolean flag = true;
-//		for (int i = 0; i < files.length; i++) {
-//			flag&=uploadFileService.getUploadFilePath(files[0], String.valueOf(i));
-//		}
-//		if (flag) {
-//			return ResultFactory.buildSuccessResult("Upload Successfully");
-//		} 
-//		return ResultFactory.buildFailResult("Upload Fail");
-//	}
+	@CrossOrigin
+	@RequestMapping(value = "/api/upload", method = RequestMethod.POST)
+	@ResponseBody
+	public Result uploadFiles(@RequestParam("imgInput") MultipartFile[] files) {
+		Integer currentMaxID = adoptionListService.getMaxID();
+		int newID = 1;
+		List<String> urls = new ArrayList<String>(); 
+		if (null!=currentMaxID) {
+			newID = currentMaxID+1;
+		}
+		for (int i = 0; i < files.length; i++) {
+			String newUrl = uploadFileService.getUploadFilePath(files[i], newID+"/"+i);
+			if (null==newUrl) {
+				return ResultFactory.buildFailResult("Upload Fail");
+			}
+			urls.add(newUrl);
+		}
+		return ResultFactory.buildSuccessResult(urls.toArray(new String[urls.size()]));
+	}
 	@CrossOrigin
 	@RequestMapping(value = "/api/new", method = RequestMethod.POST)
 	@ResponseBody
@@ -63,10 +72,18 @@ public class AdoptionController {
 					newAdoptionInfo.getTitle(), newAdoptionInfo.getType(), newAdoptionInfo.getLocation(),
 					newAdoptionInfo.getDetail(), newAdoptionInfo.getSex(), newAdoptionInfo.getCost(),
 					newAdoptionInfo.getRequirements());
-			if (adoptionListService.addNewAdoption(newAdoption)) {
-				int newID = adoptionListService.getMaxID();
-				adoptionListService.addImages(newID, newAdoptionInfo.getImgUrl());
-				return ResultFactory.buildSuccessResult(newID);
+			Integer currentMaxID = adoptionListService.getMaxID();
+			if (null == currentMaxID) {
+				if (adoptionListService.addFirstAdoption(newAdoption)) {
+					adoptionListService.addImages(1, newAdoptionInfo.getImgUrl());
+					return ResultFactory.buildSuccessResult(1);
+				}					
+			}else {
+				if (adoptionListService.addNewAdoption(newAdoption)) {
+					int newID = adoptionListService.getMaxID();
+					adoptionListService.addImages(newID, newAdoptionInfo.getImgUrl());
+					return ResultFactory.buildSuccessResult(newID);
+				}				
 			}
 			return ResultFactory.buildFailResult("error");
 		}
