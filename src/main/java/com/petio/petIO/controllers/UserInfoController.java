@@ -109,9 +109,9 @@ public class UserInfoController {
 		if (uid == -1)
 			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
 		
-		ConnectInfo connectInfo = userService.getConnectionByID(uid);
+		PhoneInfo phoneInfo = userService.getConnectionByID(uid);
 		
-		return ResultFactory.buildSuccessResult(connectInfo);
+		return ResultFactory.buildSuccessResult(phoneInfo);
 	}
 	
 	@CrossOrigin

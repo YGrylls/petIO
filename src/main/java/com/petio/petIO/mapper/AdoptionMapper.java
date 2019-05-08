@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.petio.petIO.beans.Adoption;
+import com.petio.petIO.beans.ConnectInfo;
 
 @Mapper
 public interface AdoptionMapper {
@@ -58,4 +59,7 @@ public interface AdoptionMapper {
 	
 	@Select("select path from Picture where aID = #{aID}")
 	public List<String> getImgPaths(Integer aID);
+	
+	@Select("select communicationType,communication from Adoption where aID = #{aID}")
+	public ConnectInfo getCommunicationByID(Integer aID);
 }

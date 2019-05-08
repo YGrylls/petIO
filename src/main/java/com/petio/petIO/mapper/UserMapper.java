@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.petio.petIO.beans.ConnectInfo;
+import com.petio.petIO.beans.PhoneInfo;
 import com.petio.petIO.beans.User;
 
 @Mapper
@@ -24,7 +25,7 @@ public interface UserMapper {
 	public Integer add(User user);
 	
 	@Select("select username,userTel from User where userID = #{userID}")
-	public ConnectInfo getConnectionByID(int userID);
+	public PhoneInfo getConnectionByID(int userID);
 	
 	@Select("select count(*) from User where userID = #{uid} and password = #{password}")
 	public Integer CheckPassword(int uid, String password);

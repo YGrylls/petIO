@@ -63,6 +63,11 @@ public class AdoptionDetailController {
 		if (uid == -1)
 			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
 
+		if(adoptionService.checkApply(id, uid)) {  //申请过
+			ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);
+			return ResultFactory.buildSuccessResult(connectInfo);
+		}
+		
 		int times = adoptionService.getApplyTimes(uid); // 获取用户当前申请次数
 		if (times > 3)
 			return ResultFactory.buildFailResult("超过今日申请次数！");
@@ -72,9 +77,8 @@ public class AdoptionDetailController {
 			adoptionService.addApplyTimes(uid); // 增加今日申请次数
 
 		}
-		Adoption adoption = adoptionService.getAdoptionByID(id);
-		ConnectInfo connectInfo = userService.getConnectionByID(adoption.getEditor());
-
+		
+		ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);
 		return ResultFactory.buildSuccessResult(connectInfo);
 	}
 }

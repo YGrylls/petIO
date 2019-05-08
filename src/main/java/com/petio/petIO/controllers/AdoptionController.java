@@ -68,7 +68,8 @@ public class AdoptionController {
 			Adoption newAdoption = new Adoption(userService.getUidByName(user.getUsername()),
 					newAdoptionInfo.getTitle(), newAdoptionInfo.getType(), newAdoptionInfo.getLocation(),
 					newAdoptionInfo.getDetail(), newAdoptionInfo.getSex(), newAdoptionInfo.getCost(),
-					newAdoptionInfo.getRequirements());
+					newAdoptionInfo.getRequirements(), newAdoptionInfo.getCommunicationType(),
+					newAdoptionInfo.getCommunication());
 			Integer currentMaxID = adoptionListService.getMaxID();
 			if (null == currentMaxID) {
 				if (adoptionListService.addFirstAdoption(newAdoption)) {

@@ -1,22 +1,19 @@
 package com.petio.petIO.beans;
 
 public class ConnectInfo {
-	private String username;
-	private String userTel;
-	public String getUsername() {
-		return username;
+	private String communicationType;
+	private String communication;
+	
+	public String getCommunicationType() {
+		return communicationType;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+	public void setCommunicationType(String communicationType) {
+		this.communicationType = communicationType;
 	}
-	public String getUserTel() {
-		return userTel;
+	public String getCommunication() {
+		return communication;
 	}
-	public void setUserTel(String userTel) {
-		this.userTel = userTel;
-	}
-	@Override
-	public String toString() {
-		return "ConnectInfo [username=" + username + ", userTel=" + userTel + "]";
+	public void setCommunication(String communication) {
+		this.communication = communication;
 	}
 }

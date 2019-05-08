@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.petio.petIO.beans.Adoption;
+import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.mapper.AdoptionMapper;
 
 @Service
@@ -65,5 +66,9 @@ public class AdoptionService {
 	
 	public List<String> getImgPaths(Integer aID) {
 		return mapper.getImgPaths(aID);
+	}
+	
+	public ConnectInfo getCommunicationByID(Integer aID) {
+		return mapper.getCommunicationByID(aID);
 	}
 }

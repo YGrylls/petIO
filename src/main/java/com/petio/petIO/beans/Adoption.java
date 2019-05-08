@@ -19,6 +19,8 @@ public class Adoption {
 	private String aDetailInfo;  //详细信息
 	private boolean isFree = false;  //是否免费
 	private List<String>imgPaths;
+	private String communicationType;
+	private String communication;
 	public int getaID() {
 		return aID;
 	}
@@ -112,7 +114,8 @@ public class Adoption {
 		this.aSex = aSex;
 	}
 	public Adoption(int editor, String aTitle, String aType, String location, String aText,
-			String aSex, int aMoney, String aDetailInfo) {
+			String aSex, int aMoney, String aDetailInfo, String communicationType,
+	 String communication) {
 		super();
 		if (aMoney == 0) {
 			isFree = true;
@@ -128,10 +131,24 @@ public class Adoption {
 		this.aMoney = aMoney;
 		this.aDetailInfo = aDetailInfo;
 		this.isFree = isFree;
+		this.communicationType = communicationType;
+		this.communication = communication;
 	}
 	
 	public Adoption() {
 		super();
+	}
+	public String getCommunicationType() {
+		return communicationType;
+	}
+	public void setCommunicationType(String communicationType) {
+		this.communicationType = communicationType;
+	}
+	public String getCommunication() {
+		return communication;
+	}
+	public void setCommunication(String communication) {
+		this.communication = communication;
 	}
 	
 }
