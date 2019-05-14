@@ -45,6 +45,9 @@ public interface AdoptionMapper {
 	@Update("update Adoption set expireDate = #{date} where aID = #{aid}")
 	public Integer delayDate(Integer aid, Date date);
 	
+	@Update("update Adoption set aState = #{state} where aID = #{aid}")
+	public Integer changeState(Integer aid, Integer state);
+	
 	@Delete("delete from Adoption where aID = #{aID}")
 	public Integer deleteAdoptionByid(Integer aID);
 	
@@ -62,4 +65,7 @@ public interface AdoptionMapper {
 	
 	@Select("select communicationType,communication from Adoption where aID = #{aID}")
 	public ConnectInfo getCommunicationByID(Integer aID);
+	
+	@Select("select * from Adoption where aID in (select aID from Apply where applier = #{uid})")
+	public List<Adoption> getAdoptionsByApply(Integer uid);
 }

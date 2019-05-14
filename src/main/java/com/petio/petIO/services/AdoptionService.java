@@ -71,4 +71,12 @@ public class AdoptionService {
 	public ConnectInfo getCommunicationByID(Integer aID) {
 		return mapper.getCommunicationByID(aID);
 	}
+	
+	public Integer changeState(Integer aid, Integer state) {
+		return mapper.changeState(aid, state);
+	}
+	
+	public List<Adoption> getAdoptionsByApply(Integer uid){
+		return mapper.getAdoptionsByApply(uid);
+	}
 }
