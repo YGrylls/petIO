@@ -3,7 +3,6 @@ package com.petio.petIO.beans;
 public class User {
 	String username;
 	String password;
-	String userTel;
 	float userScore;
 	String userMail;
 
@@ -15,11 +14,19 @@ public class User {
 		this.userMail = userMail;
 	}
 
-	public User(String username, String password, String userTel, float userScore) {
+	public User(String username, String password, String userMail, float userScore) {
 		super();
 		this.username = username;
 		this.password = password;
-		this.userTel = userTel;
+		this.userScore = userScore;
+		this.userMail = userMail;
+	}
+
+	public float getUserScore() {
+		return userScore;
+	}
+
+	public void setUserScore(float userScore) {
 		this.userScore = userScore;
 	}
 
@@ -39,16 +46,10 @@ public class User {
 		this.password = password;
 	}
 
-	public String getUserTel() {
-		return userTel;
-	}
-
-	public void setUserTel(String userTel) {
-		this.userTel = userTel;
-	}
-
 	@Override
 	public String toString() {
-		return "User [username=" + username + ", password=" + password + ", userTel=" + userTel + "]";
+		return "User [username=" + username + ", password=" + password + ", userScore=" + userScore + ", userMail="
+				+ userMail + "]";
 	}
+
 }
