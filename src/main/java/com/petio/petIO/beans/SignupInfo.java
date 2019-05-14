@@ -12,7 +12,29 @@ public class SignupInfo {
     @NotNull(message="电话不允许为空")
     private String userTel;
 
-    public String getUsername() {
+    @NotNull(message="邮箱不允许为空")
+    private String userMail;
+    
+    @NotNull(message="验证码不允许为空")
+    private String verifyCode;
+    
+    public String getUserMail() {
+		return userMail;
+	}
+
+	public void setUserMail(String userMail) {
+		this.userMail = userMail;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
+	}
+
+	public String getUsername() {
         return username;
     }
 

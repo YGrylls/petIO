@@ -21,7 +21,7 @@ public interface UserMapper {
 	@Select("select username from User where userID = #{userID}")
 	public String getUsernameByID(int userID);
 	
-	@Insert("insert into User (username,password,userTel,userScore)values(#{username},#{password},#{userTel},#{userScore})")
+	@Insert("insert into User (username,password,userTel,userScore,userMail)values(#{username},#{password},#{userTel},#{userScore},#{userMail})")
 	public Integer add(User user);
 	
 	@Select("select username,userTel from User where userID = #{userID}")
@@ -35,4 +35,11 @@ public interface UserMapper {
 	
 	@Update("update User set userTel = #{newphone} where userID = #{uid}")
 	public Integer updatePhone(Integer uid,String newphone);
+
+	@Select("select count(*) from User where userMail = #{mail}")
+	public Integer checkMailAddress(String mail);
+	
+	
+	@Update("update User set password = #{newpass} where userMail = #{mail}")
+	public Integer changePasswordByMail(String mail,String newpass);
 }

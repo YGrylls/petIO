@@ -1,5 +1,7 @@
 package com.petio.petIO.controllers;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.Cookie;
@@ -24,12 +26,15 @@ import com.petio.petIO.beans.SignupInfo;
 import com.petio.petIO.beans.User;
 import com.petio.petIO.services.UserRedisService;
 import com.petio.petIO.services.UserService;
+import com.petio.petIO.services.VerifyService;
 
 @Controller
 public class LoginController {
 	@Autowired
 	UserService userService;
-
+	@Autowired
+	VerifyService verifyService;
+	
 	@CrossOrigin
 	@RequestMapping(value = "/api/login", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
@@ -64,12 +69,11 @@ public class LoginController {
 	@CrossOrigin
 	@RequestMapping(value = "/api/signup", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public Result signup(@Valid @RequestBody SignupInfo signupInfoVo, BindingResult bindingResult) {
+	public Result signup(@Valid @RequestBody SignupInfo signupInfoVo, BindingResult bindingResult,HttpServletRequest request, HttpServletResponse response) {
 		User user = userService.getUserByName(signupInfoVo.getUsername());
 		if (user != null) {
 			return ResultFactory.buildFailResult("用户已存在");
 		}
-
 		if (signupInfoVo.getUsername().length() > 16 || signupInfoVo.getUsername().isEmpty()
 				|| signupInfoVo.getPassword().length() > 16 || signupInfoVo.getPassword().isEmpty()
 				|| signupInfoVo.getUserTel().length() > 16 || signupInfoVo.getUserTel().isEmpty()) {
@@ -80,10 +84,42 @@ public class LoginController {
 				signupInfoVo.getUserTel())) {
 			return ResultFactory.buildFailResult("电话号码不符合规范");
 		}
-
+		
+		HttpSession session = request.getSession();
+    	Object verCode = session.getAttribute("verCode");
+    	if (null == verCode) {
+    		return ResultFactory.buildFailResult("验证码已失效，请重新输入");
+    	}
+    	String verCodeStr = verCode.toString();
+    	String code = signupInfoVo.getVerifyCode();
+    	if(verCodeStr == null || code == null || code.isEmpty() || !verCodeStr.equalsIgnoreCase(code)){
+    		return ResultFactory.buildFailResult("验证码错误");
+    	}
+		session.removeAttribute("verCode");	
 		User user2 = new User(signupInfoVo.getUsername(), signupInfoVo.getPassword(), signupInfoVo.getUserTel(), 0);
 		userService.add(user2);
 		return ResultFactory.buildSuccessResult("注册成功");
 	}
-
+	@CrossOrigin
+	@RequestMapping(value = "/api/mailcodeonsignup", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public Result sendMailCodeOnSignup(@RequestBody String mailAddress,HttpServletRequest request, HttpServletResponse response) {
+		System.out.println(mailAddress);
+		if (userService.checkMailAddress(mailAddress)>0) {
+			ResultFactory.buildFailResult("邮箱已被注册");
+		}
+//		if (verifyService.valid(mailAddress)) {
+			String verifyCode = verifyService.generateVerifyCode(6);
+			String content = "本次操作验证码为： "+"<b>"+verifyCode +"</b>";
+			verifyService.sendMail(mailAddress, "账号注册", content);
+//		}else {
+//			ResultFactory.buildFailResult("邮箱无效");
+//		}
+		HttpSession session = request.getSession(true);
+		session.removeAttribute("verCode");
+		session.setAttribute("verCode", verifyCode.toLowerCase());
+		return ResultFactory.buildSuccessResult("验证码发送成功");
+	}
+	
+	
 }

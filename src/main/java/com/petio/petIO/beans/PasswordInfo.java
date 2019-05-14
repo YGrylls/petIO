@@ -1,19 +1,27 @@
 package com.petio.petIO.beans;
 
 public class PasswordInfo {
-	String oldpass;
-	String newpass;
-	public String getOldpass() {
-		return oldpass;
+	private String mailAddress;
+	private String password;
+	private String verifyCode;
+	
+	public String getVerifyCode() {
+		return verifyCode;
 	}
-	public void setOldpass(String oldpass) {
-		this.oldpass = oldpass;
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
-	public String getNewpass() {
-		return newpass;
+	public String getMailAddress() {
+		return mailAddress;
 	}
-	public void setNewpass(String newpass) {
-		this.newpass = newpass;
+	public void setMailAddress(String mailAddress) {
+		this.mailAddress = mailAddress;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 }

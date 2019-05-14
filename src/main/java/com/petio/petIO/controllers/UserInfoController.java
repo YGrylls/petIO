@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,7 @@ import com.petio.petIO.beans.Result;
 import com.petio.petIO.beans.User;
 import com.petio.petIO.services.AdoptionService;
 import com.petio.petIO.services.UserService;
+import com.petio.petIO.services.VerifyService;
 
 @Controller
 public class UserInfoController {
@@ -41,30 +43,66 @@ public class UserInfoController {
 	@Autowired
 	AdoptionService adoptionService;
 	
+	@Autowired
+	VerifyService verifyService;
+	
 	@CrossOrigin
 	@RequestMapping(value = "/api/userinfo/changePassword", method = RequestMethod.POST)
 	@ResponseBody
 	public Result changePassword(@RequestBody PasswordInfo passwordInfo,
 			HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+    	Object verCode = session.getAttribute("verCode");
+    	if (null == verCode) {
+    		return ResultFactory.buildFailResult("验证码已失效，请重新输入");
+    	}
+    	String verCodeStr = verCode.toString();
+    	String code = passwordInfo.getVerifyCode();
+    	if(verCodeStr == null || code == null || code.isEmpty() || !verCodeStr.equalsIgnoreCase(code)){
+    		return ResultFactory.buildFailResult("验证码错误");
+    	}
+		session.removeAttribute("verCode");	
 		
-		int uid = -1; 
-		try {
-			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
-		} catch (Exception e) {
-			System.out.println("fuck:" + e.getMessage());
-			e.printStackTrace();
-		}
-		if (uid == -1)
-			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
-		
-		if(userService.CheckPassword(uid, passwordInfo.getOldpass())) {
-			userService.updatePassword(uid, passwordInfo.getNewpass());
-		}
-		else {
-			return ResultFactory.buildFailResult("修改失败，旧密码不正确");
-		}
+		userService.changePassword(passwordInfo.getMailAddress(),passwordInfo.getPassword());
+//		int uid = -1; 
+//		try {
+//			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+//		} catch (Exception e) {
+//			System.out.println("fuck:" + e.getMessage());
+//			e.printStackTrace();
+//		}
+//		if (uid == -1)
+//			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
+//		
+//		if(userService.CheckPassword(uid, passwordInfo.getOldpass())) {
+//			userService.updatePassword(uid, passwordInfo.getNewpass());
+//		}
+//		else {
+//			return ResultFactory.buildFailResult("修改失败，旧密码不正确");
+//		}
 		
 		return ResultFactory.buildSuccessResult("修改成功");
+	}
+	
+	@CrossOrigin
+	@RequestMapping(value = "/api/mailcodeonchangepwd", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public Result sendMailCodeOnSignup(@RequestBody String mailAddress,HttpServletRequest request, HttpServletResponse response) {
+		System.out.println(mailAddress);
+		if (userService.checkMailAddress(mailAddress)!=1) {
+			ResultFactory.buildFailResult("账号邮箱未注册");
+		}
+//		if (verifyService.valid(mailAddress)) {
+			String verifyCode = verifyService.generateVerifyCode(6);
+			String content = "本次操作验证码为： "+"<b>"+verifyCode +"</b>";
+			verifyService.sendMail(mailAddress, "账号密码修改", content);
+//		}else {
+//			ResultFactory.buildFailResult("邮箱无效");
+//		}
+		HttpSession session = request.getSession(true);
+		session.removeAttribute("verCode");
+		session.setAttribute("verCode", verifyCode.toLowerCase());
+		return ResultFactory.buildSuccessResult("验证码发送成功");
 	}
 	
 	@CrossOrigin

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.mockito.internal.stubbing.answers.ReturnsElementsOf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -125,6 +126,17 @@ public class UserService {
 	
 	public Integer updatePhone(Integer uid,String newphone) {
 		return userMapper.updatePhone(uid, newphone);
+	}
+	
+	public int checkMailAddress(String mail) {
+		return userMapper.checkMailAddress(mail);
+	}
+	
+	public boolean changePassword(String mail,String password) {
+		if (userMapper.changePasswordByMail(mail,password)==1) {
+			return true;
+		}
+		return false;
 	}
 
 }

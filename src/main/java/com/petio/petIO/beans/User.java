@@ -5,6 +5,15 @@ public class User {
 	String password;
 	String userTel;
 	float userScore;
+	String userMail;
+
+	public String getUserMail() {
+		return userMail;
+	}
+
+	public void setUserMail(String userMail) {
+		this.userMail = userMail;
+	}
 
 	public User(String username, String password, String userTel, float userScore) {
 		super();
