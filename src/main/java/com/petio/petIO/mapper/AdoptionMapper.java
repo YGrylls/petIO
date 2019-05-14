@@ -66,6 +66,6 @@ public interface AdoptionMapper {
 	@Select("select communicationType,communication from Adoption where aID = #{aID}")
 	public ConnectInfo getCommunicationByID(Integer aID);
 	
-	@Select("select * from Adoption where aID in (select aID from Apply where applier = #{uid})")
+	@Select("select * from Adoption where aID in (select aID from Apply where applier = #{uid}) and aState = 1")
 	public List<Adoption> getAdoptionsByApply(Integer uid);
 }
