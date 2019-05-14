@@ -97,6 +97,7 @@ public class LoginController {
     	}
 		session.removeAttribute("verCode");	
 		User user2 = new User(signupInfoVo.getUsername(), signupInfoVo.getPassword(), signupInfoVo.getUserTel(), 0);
+		user2.setUserMail(signupInfoVo.getUserMail());
 		userService.add(user2);
 		return ResultFactory.buildSuccessResult("注册成功");
 	}
