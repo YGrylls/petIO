@@ -144,7 +144,6 @@ public class UserInfoController {
 			System.out.println("fuck:" + e.getMessage());
 			e.printStackTrace();
 		}
-		uid = 11;
 		if (uid == -1)
 			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
 		

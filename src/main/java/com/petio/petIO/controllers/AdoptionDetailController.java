@@ -79,6 +79,8 @@ public class AdoptionDetailController {
 		}
 		
 		ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);
+		connectInfo.setUsername(userService.getUsernameByID(uid));
+		
 		return ResultFactory.buildSuccessResult(connectInfo);
 	}
 }

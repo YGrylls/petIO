@@ -138,5 +138,8 @@ public class UserService {
 		}
 		return false;
 	}
-
+	
+	public String getUsernameByID(int userID) {
+		return userMapper.getUsernameByID(userID);
+	}
 }
