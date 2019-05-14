@@ -28,7 +28,7 @@ import com.petio.petIO.Utils.ResultFactory;
 import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.beans.PasswordInfo;
-import com.petio.petIO.beans.PhoneInfo;
+import com.petio.petIO.beans.PersonInfo;
 import com.petio.petIO.beans.Result;
 import com.petio.petIO.beans.User;
 import com.petio.petIO.services.AdoptionService;
@@ -105,32 +105,32 @@ public class UserInfoController {
 		return ResultFactory.buildSuccessResult("验证码发送成功");
 	}
 	
-	@CrossOrigin
-	@RequestMapping(value = "/api/userinfo/changePhone", method = RequestMethod.POST)
-	@ResponseBody
-	public Result changePhone(@RequestBody PhoneInfo phoneInfo,
-			HttpServletRequest request, HttpServletResponse response) {
-		
-		int uid = -1; 
-		try {
-			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
-		} catch (Exception e) {
-			System.out.println("fuck:" + e.getMessage());
-			e.printStackTrace();
-		}
-		if (uid == -1)
-			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
-		
-		if (!Pattern.matches(
-				"^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$",
-				phoneInfo.getUserTel())) {
-			return ResultFactory.buildFailResult("电话号码不符合规范");
-		}
-		
-		userService.updatePhone(uid, phoneInfo.getUserTel());
-		
-		return ResultFactory.buildSuccessResult("修改成功");
-	}
+//	@CrossOrigin
+//	@RequestMapping(value = "/api/userinfo/changePhone", method = RequestMethod.POST)
+//	@ResponseBody
+//	public Result changePhone(@RequestBody PersonInfo personInfo,
+//			HttpServletRequest request, HttpServletResponse response) {
+//		
+//		int uid = -1; 
+//		try {
+//			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+//		} catch (Exception e) {
+//			System.out.println("fuck:" + e.getMessage());
+//			e.printStackTrace();
+//		}
+//		if (uid == -1)
+//			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
+//		
+//		if (!Pattern.matches(
+//				"^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$",
+//				personInfo.getUserTel())) {
+//			return ResultFactory.buildFailResult("电话号码不符合规范");
+//		}
+//		
+//		userService.updatePhone(uid, personInfo.getUserTel());
+//		
+//		return ResultFactory.buildSuccessResult("修改成功");
+//	}
 	
 	@CrossOrigin
 	@RequestMapping(value = "/api/userinfo/info", method = RequestMethod.GET)
@@ -144,12 +144,13 @@ public class UserInfoController {
 			System.out.println("fuck:" + e.getMessage());
 			e.printStackTrace();
 		}
+		uid = 11;
 		if (uid == -1)
 			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
 		
-		PhoneInfo phoneInfo = userService.getConnectionByID(uid);
+		PersonInfo personInfo = userService.getConnectionByID(uid);
 		
-		return ResultFactory.buildSuccessResult(phoneInfo);
+		return ResultFactory.buildSuccessResult(personInfo);
 	}
 	
 	@CrossOrigin

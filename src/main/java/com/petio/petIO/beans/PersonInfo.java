@@ -1,18 +1,19 @@
 package com.petio.petIO.beans;
 
-public class PhoneInfo {
+public class PersonInfo {
 	String username;
-	String userTel;
+	String userMail;
 	public String getUsername() {
 		return username;
 	}
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	public String getUserTel() {
-		return userTel;
+	public String getUserMail() {
+		return userMail;
 	}
-	public void setUserTel(String userTel) {
-		this.userTel = userTel;
+	public void setUserMail(String userMail) {
+		this.userMail = userMail;
 	}
+	
 }

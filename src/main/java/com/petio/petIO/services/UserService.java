@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import com.petio.petIO.beans.ConnectInfo;
-import com.petio.petIO.beans.PhoneInfo;
+import com.petio.petIO.beans.PersonInfo;
 import com.petio.petIO.beans.User;
 import com.petio.petIO.mapper.UserMapper;
 
@@ -40,7 +40,7 @@ public class UserService {
 		return userMapper.getUidByName(username);
 	}
 	
-	public PhoneInfo getConnectionByID(int userID) {
+	public PersonInfo getConnectionByID(int userID) {
 		return userMapper.getConnectionByID(userID);
 	}
 
