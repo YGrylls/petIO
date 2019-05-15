@@ -65,6 +65,8 @@ public class AdoptionDetailController {
 
 		if(adoptionService.checkApply(id, uid)) {  //申请过
 			ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);
+			Adoption adoption = adoptionService.getAdoptionByID(id);
+			connectInfo.setUsername(userService.getUsernameByID(adoption.getEditor()));
 			return ResultFactory.buildSuccessResult(connectInfo);
 		}
 		
