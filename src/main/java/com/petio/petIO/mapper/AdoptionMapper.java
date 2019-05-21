@@ -33,6 +33,15 @@ public interface AdoptionMapper {
 	@Update("update ApplyTimes set times = times + 1 where uID = #{uID}")
 	public Integer updateApplyTimes(Integer uID);
 	
+	@Update("update Adoption set aView = aView + 1 where aID = #{aID}")
+	public Integer updateView(Integer aID);
+	
+	@Update("update Adoption set aRead = aRead + 1 where aID = #{aID}")
+	public Integer updateRead(Integer aID);
+	
+	@Update("update Adoption set aRead = 0 where aID = #{aID}")
+	public Integer resetRead(Integer aID);
+	
 	@Insert("insert into ApplyTimes (uID,times)values(#{uID},1)")
 	public Integer addApplyTimes(Integer uID);
 	

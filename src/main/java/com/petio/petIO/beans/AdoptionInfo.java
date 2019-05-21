@@ -12,9 +12,17 @@ public class AdoptionInfo {
 	private String aText;
 	private Date publishDate;
 	private int aRead;
+	private int aView;
 	private Date expireDate;
 	private int aState;
 	private List<String>imgPaths;
+	
+	public int getaView() {
+		return aView;
+	}
+	public void setaView(int aView) {
+		this.aView = aView;
+	}
 	public int getaID() {
 		return aID;
 	}

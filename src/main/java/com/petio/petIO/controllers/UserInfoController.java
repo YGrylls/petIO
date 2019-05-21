@@ -170,13 +170,13 @@ public class UserInfoController {
 		List<Adoption> adoptions = adoptionService.getAdoptionsByUid(uid);
 		
 		for(Adoption adoption:adoptions) {
+			adoptionService.resetRead(adoption.getaID());
 			if (adoption.getaMoney() == 0)
 				adoption.setFree(true);
 			else
 				adoption.setFree(false);
 				adoption.setImgPaths(adoptionService.getImgPaths(adoption.getaID())); // 获取图片路径
 		}
-		
 		return ResultFactory.buildSuccessResult(adoptions);
 	}
 	
@@ -270,5 +270,24 @@ public class UserInfoController {
 		}
 		
 		return ResultFactory.buildSuccessResult(adoptions);
+	}
+	@CrossOrigin
+	@RequestMapping(value = "/api/userinfo/getreadstate/{id}", method = RequestMethod.POST)
+	@ResponseBody
+	public Result getReadState(@PathVariable("id") Integer id,
+			HttpServletRequest request, HttpServletResponse response){
+		int uid = -1; 
+		try {
+			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+		} catch (Exception e) {
+			System.out.println("fuck:" + e.getMessage());
+			e.printStackTrace();
+		}
+		if (uid == -1)
+			return ResultFactory.buildAuthFailResult("用户未登录");
+		int newInfo = userService.getNewByID(uid);
+
+		
+		return ResultFactory.buildSuccessResult(newInfo);
 	}
 }

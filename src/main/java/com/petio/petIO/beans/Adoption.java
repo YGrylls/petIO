@@ -12,6 +12,7 @@ public class Adoption {
 	private String aText;    //简介
 	private Date publishDate;
 	private int aRead;
+	private int aView;
 	private Date expireDate;
 	private int aState;   //状态
 	private String aSex;  //性别
@@ -26,6 +27,13 @@ public class Adoption {
 	}
 	public void setaID(int aID) {
 		this.aID = aID;
+	}
+	
+	public int getaView() {
+		return aView;
+	}
+	public void setaView(int aView) {
+		this.aView = aView;
 	}
 	public int getEditor() {
 		return editor;

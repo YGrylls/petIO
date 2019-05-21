@@ -44,7 +44,7 @@ public class AdoptionDetailController {
 		adoption.setImgPaths(adoptionService.getImgPaths(id)); // 获取图片路径
 
 		System.out.println(adoption);
-
+		adoptionService.updateView(id);
 		return ResultFactory.buildSuccessResult(adoption);
 	}
 
@@ -78,7 +78,7 @@ public class AdoptionDetailController {
 		if (!adoptionService.checkApply(id, uid)) { // 没申请过
 			adoptionService.addApply(id, uid);
 			adoptionService.addApplyTimes(uid); // 增加今日申请次数
-
+			adoptionService.updateRead(id);
 		}
 		
 		ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);
