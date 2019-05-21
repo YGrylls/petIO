@@ -1,0 +1,22 @@
+package com.petio.petIO.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import com.petio.petIO.beans.CommentInfo;
+
+@Mapper
+public interface CommentMapper {
+
+	@Select("select Comment.cID, Comment.commentText, u1.username as fromUser, u2.userName as toUser, Comment.pubtime from Comment inner join User u1 on Comment.from = u1.userID and Comment.aID = #{aID} left join User u2 on Comment.to = u2.userID")
+	public List<CommentInfo> getCommentsByAdoptionID(Integer aID);
+
+	@Insert("insert into Comment (commentText, from, to, aID) valuse (#{commentText},#{from},#{to},#{aID}) ")
+	public Integer addCommentWithTo(String commentText, Integer from, Integer to, Integer aID);
+
+	@Insert("insert into Comment (commentText, from, aID) valuse (#{commentText},#{from},#{aID})")
+	public Integer addCommentNoTo(String commentText, Integer from, Integer aID);
+}
