@@ -1,5 +1,7 @@
 package com.petio.petIO.services;
 
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withBadRequest;
+
 import java.sql.Date;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.petio.petIO.beans.Adoption;
+import com.petio.petIO.beans.Candidate;
 import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.mapper.AdoptionMapper;
 
@@ -87,5 +90,30 @@ public class AdoptionService {
 	}
 	public Integer resetRead(Integer aID) {
 		return mapper.resetRead(aID);
+	}
+	
+	public List<Candidate> getCandidatesByAID(Integer aID){
+		return mapper.getCandidatesByAID(aID);
+	}
+	
+	public Integer addFirstHandShake(Integer aID, Integer acceptor) {
+		return mapper.addFirstHandShake(aID, acceptor);
+	}
+	
+	public boolean checkRecord(Integer aID) {
+		if(mapper.checkRecord(aID) > 0)return true;
+		return false;
+	}
+	
+	public Integer addSecondHandShake(Integer aID) {
+		return mapper.addSecondHandShake(aID);
+	}
+	
+	public Integer deleteRecord(Integer aID) {
+		return mapper.deleteRecord(aID);
+	}
+	
+	public List<Adoption> getFirstAdoptions(Integer uid){
+		return mapper.getFirstAdoptions(uid);
 	}
 }

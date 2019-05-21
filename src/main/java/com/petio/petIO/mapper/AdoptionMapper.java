@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.petio.petIO.beans.Adoption;
+import com.petio.petIO.beans.Candidate;
 import com.petio.petIO.beans.ConnectInfo;
 
 @Mapper
@@ -75,6 +76,24 @@ public interface AdoptionMapper {
 	@Select("select communicationType,communication from Adoption where aID = #{aID}")
 	public ConnectInfo getCommunicationByID(Integer aID);
 	
-	@Select("select * from Adoption where aID in (select aID from Apply where applier = #{uid}) and aState = 1 and editor <> #{uid}")
+	@Select("select * from Adoption where aID in (select aID from Apply where applier = #{uid}) and (aState = 1 or aState = 5) and editor <> #{uid}")
 	public List<Adoption> getAdoptionsByApply(Integer uid);
+	
+	@Select("select userID, username from User where userID in (select applier from Apply where aID = #{aID})")
+	public List<Candidate> getCandidatesByAID(Integer aID);
+	
+	@Insert("insert into Record (aID,acceptor,stage)values(#{aID},#{acceptor},'firstHandShake')")
+	public Integer addFirstHandShake(Integer aID, Integer acceptor);
+	
+	@Update("update Record set stage = 'SecondHandShake' where aID = #{aID}")
+	public Integer addSecondHandShake(Integer aID);
+	
+	@Select("select count(*) from Record where aID = #{aID}")
+	public Integer checkRecord(Integer aID);
+	
+	@Delete("delete from Record where aID = #{aID}")
+	public Integer deleteRecord(Integer aID);
+	
+	@Select("select * from Adoption where aID in (select aID from Record where acceptor = #{uid} and stage = 'firstHandShake')")
+	public List<Adoption> getFirstAdoptions(Integer uid);
 }

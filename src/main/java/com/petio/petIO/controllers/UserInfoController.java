@@ -26,10 +26,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.petio.petIO.Utils.GeneralUtils;
 import com.petio.petIO.Utils.ResultFactory;
 import com.petio.petIO.beans.Adoption;
+import com.petio.petIO.beans.Candidate;
 import com.petio.petIO.beans.ConnectInfo;
+import com.petio.petIO.beans.FirstHandShake;
 import com.petio.petIO.beans.PasswordInfo;
 import com.petio.petIO.beans.PersonInfo;
 import com.petio.petIO.beans.Result;
+import com.petio.petIO.beans.SecondHandShake;
 import com.petio.petIO.beans.User;
 import com.petio.petIO.services.AdoptionService;
 import com.petio.petIO.services.UserService;
@@ -289,5 +292,76 @@ public class UserInfoController {
 
 		
 		return ResultFactory.buildSuccessResult(newInfo);
+	}
+	
+	@CrossOrigin
+	@RequestMapping(value = "/api/userinfo/getCandidates/{id}", method = RequestMethod.POST)
+	@ResponseBody
+	public Result getCandidates(@PathVariable("id") Integer id,
+			HttpServletRequest request, HttpServletResponse response){
+		int uid = -1; 
+		try {
+			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+		} catch (Exception e) {
+			System.out.println("fuck:" + e.getMessage());
+			e.printStackTrace();
+		}
+		if (uid == -1)
+			return ResultFactory.buildAuthFailResult("用户未登录");
+		
+		if(adoptionService.checkRecord(id))return ResultFactory.buildFailResult("已选择候选人！");
+		
+		List<Candidate> candidates = adoptionService.getCandidatesByAID(id);
+		
+		return ResultFactory.buildSuccessResult(candidates);
+	}
+	
+	@CrossOrigin
+	@RequestMapping(value = "/api/userinfo/firstHandShake", method = RequestMethod.POST)
+	@ResponseBody
+	public Result firstHandShake(@RequestBody FirstHandShake firstHandShake,
+			HttpServletRequest request, HttpServletResponse response){
+		
+		int uid = userService.getUidByName(firstHandShake.getUsername());
+		
+		adoptionService.addFirstHandShake(firstHandShake.getaID(), uid);
+		
+		return ResultFactory.buildSuccessResult("成功");
+	}
+	
+	@CrossOrigin
+	@RequestMapping(value = "/api/userinfo/AfterFirst", method = RequestMethod.GET)
+	@ResponseBody
+	public Result AfterFirstHandShake(HttpServletRequest request, HttpServletResponse response){
+		int uid = -1; 
+		try {
+			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+		} catch (Exception e) {
+			System.out.println("fuck:" + e.getMessage());
+			e.printStackTrace();
+		}
+		if (uid == -1)
+			return ResultFactory.buildAuthFailResult("用户未登录");
+		
+		List<Adoption> adoptions = adoptionService.getFirstAdoptions(uid);
+		
+		return ResultFactory.buildSuccessResult(adoptions);
+	}
+	
+	@CrossOrigin
+	@RequestMapping(value = "/api/userinfo/secondHandShake", method = RequestMethod.POST)
+	@ResponseBody
+	public Result secondHandShake(@RequestBody SecondHandShake secondHandShake,
+			HttpServletRequest request, HttpServletResponse response){
+		
+		if(secondHandShake.isAgree()) {
+			adoptionService.addSecondHandShake(secondHandShake.getaID());
+			adoptionService.changeState(secondHandShake.getaID(), 5);
+		}
+		else {
+			adoptionService.deleteRecord(secondHandShake.getaID());
+		}
+		
+		return ResultFactory.buildSuccessResult("成功");
 	}
 }
