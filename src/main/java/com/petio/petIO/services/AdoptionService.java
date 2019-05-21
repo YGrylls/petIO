@@ -79,4 +79,13 @@ public class AdoptionService {
 	public List<Adoption> getAdoptionsByApply(Integer uid){
 		return mapper.getAdoptionsByApply(uid);
 	}
+	public Integer updateView(Integer aID) {
+		return mapper.updateView(aID);
+	}
+	public Integer updateRead(Integer aID) {
+		return mapper.updateRead(aID);
+	}
+	public Integer resetRead(Integer aID) {
+		return mapper.resetRead(aID);
+	}
 }

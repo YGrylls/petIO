@@ -137,4 +137,11 @@ public class UserService {
 	public String getUsernameByID(int userID) {
 		return userMapper.getUsernameByID(userID);
 	}
+	public Integer getNewByName(String username) {
+		int userID = userMapper.getUidByName(username);
+		return userMapper.getNewByID(userID);
+	}
+	public Integer getNewByID(int userID) {
+		return userMapper.getNewByID(userID);
+	}
 }

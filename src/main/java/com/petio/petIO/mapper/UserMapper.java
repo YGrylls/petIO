@@ -16,7 +16,10 @@ public interface UserMapper {
 
 	@Select("select userID from User where username = #{username}")
 	public Integer getUidByName(String username);
-
+	
+	@Select("select count(aRead) from Adoption where editor = #{userID}")
+	public Integer getNewByID(int userID);
+	
 	@Select("select username from User where userID = #{userID}")
 	public String getUsernameByID(int userID);
 
