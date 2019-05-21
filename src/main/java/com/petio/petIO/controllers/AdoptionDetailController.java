@@ -74,6 +74,7 @@ public class AdoptionDetailController {
 		if (times > 3)
 			return ResultFactory.buildFailResult("超过今日申请次数！");
 
+		
 		if (!adoptionService.checkApply(id, uid)) { // 没申请过
 			adoptionService.addApply(id, uid);
 			adoptionService.addApplyTimes(uid); // 增加今日申请次数
