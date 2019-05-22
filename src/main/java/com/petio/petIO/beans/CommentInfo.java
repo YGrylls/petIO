@@ -58,6 +58,10 @@ public class CommentInfo {
 		this.pubtime = pubtime;
 	}
 
+	public CommentInfo() {
+		super();
+	}
+
 	@Override
 	public String toString() {
 		return "CommentInfo [cID=" + cID + ", commentText=" + commentText + ", fromUser=" + fromUser + ", toUser="

@@ -41,6 +41,7 @@ public class CommentController {
 		if (!newComment.validate())
 			return ResultFactory.buildFailResult("Comment invalid");
 		User user = userService.getCurrentUser(request, response);
+		System.out.println("-----------comment----" + user);
 		if (null != user) {
 			if (commentService.addNewComment(user, newComment))
 				return ResultFactory.buildSuccessResult("CommentSuccess");
