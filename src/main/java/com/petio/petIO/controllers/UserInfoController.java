@@ -35,6 +35,7 @@ import com.petio.petIO.beans.Result;
 import com.petio.petIO.beans.SecondHandShake;
 import com.petio.petIO.beans.User;
 import com.petio.petIO.services.AdoptionService;
+import com.petio.petIO.services.UserRedisService;
 import com.petio.petIO.services.UserService;
 import com.petio.petIO.services.VerifyService;
 
@@ -48,6 +49,9 @@ public class UserInfoController {
 	
 	@Autowired
 	VerifyService verifyService;
+	
+	@Autowired
+	UserRedisService userRedisService;
 	
 	@CrossOrigin
 	@RequestMapping(value = "/api/userinfo/changePassword", method = RequestMethod.POST)
@@ -142,13 +146,13 @@ public class UserInfoController {
 		
 		int uid = -1; 
 		try {
-			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+			uid = GeneralUtils.getUidByCookie(request,userService,userRedisService); // 通过Cookie获取用户id
 		} catch (Exception e) {
 			System.out.println("fuck:" + e.getMessage());
 			e.printStackTrace();
 		}
 		if (uid == -1)
-			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
+			return ResultFactory.buildAuthFailResult("申请失败，您未登录或已过期");
 		
 		PersonInfo personInfo = userService.getConnectionByID(uid);
 		
@@ -162,13 +166,13 @@ public class UserInfoController {
 		
 		int uid = -1; 
 		try {
-			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+			uid = GeneralUtils.getUidByCookie(request,userService,userRedisService); // 通过Cookie获取用户id
 		} catch (Exception e) {
 			System.out.println("fuck:" + e.getMessage());
 			e.printStackTrace();
 		}
 		if (uid == -1)
-			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
+			return ResultFactory.buildAuthFailResult("申请失败，您未登录或已过期");
 		
 		List<Adoption> adoptions = adoptionService.getAdoptionsByUid(uid);
 		
@@ -221,13 +225,13 @@ public class UserInfoController {
 			HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException {
 		int uid = -1; 
 		try {
-			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+			uid = GeneralUtils.getUidByCookie(request,userService,userRedisService); // 通过Cookie获取用户id
 		} catch (Exception e) {
 			System.out.println("fuck:" + e.getMessage());
 			e.printStackTrace();
 		}
 		if (uid == -1)
-			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
+			return ResultFactory.buildAuthFailResult("申请失败，您未登录或已过期");
 		
 		Adoption adoption = adoptionService.getAdoptionByID(id);
 		if(adoption == null || adoption.getEditor() != uid)
@@ -254,13 +258,13 @@ public class UserInfoController {
 		
 		int uid = -1; 
 		try {
-			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+			uid = GeneralUtils.getUidByCookie(request,userService,userRedisService); // 通过Cookie获取用户id
 		} catch (Exception e) {
 			System.out.println("fuck:" + e.getMessage());
 			e.printStackTrace();
 		}
 		if (uid == -1)
-			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
+			return ResultFactory.buildAuthFailResult("申请失败，您未登录或已过期");
 		
 		List<Adoption> adoptions = adoptionService.getAdoptionsByApply(uid);
 		
@@ -281,13 +285,13 @@ public class UserInfoController {
 			HttpServletRequest request, HttpServletResponse response){
 		int uid = -1; 
 		try {
-			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+			uid = GeneralUtils.getUidByCookie(request,userService,userRedisService); // 通过Cookie获取用户id
 		} catch (Exception e) {
 			System.out.println("fuck:" + e.getMessage());
 			e.printStackTrace();
 		}
 		if (uid == -1)
-			return ResultFactory.buildAuthFailResult("用户未登录");
+			return ResultFactory.buildAuthFailResult("用户未登录或已过期");
 		int newInfo = userService.getNewByID(uid);
 
 		
@@ -301,15 +305,15 @@ public class UserInfoController {
 			HttpServletRequest request, HttpServletResponse response){
 		int uid = -1; 
 		try {
-			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+			uid = GeneralUtils.getUidByCookie(request,userService,userRedisService); // 通过Cookie获取用户id
 		} catch (Exception e) {
 			System.out.println("fuck:" + e.getMessage());
 			e.printStackTrace();
 		}
 		if (uid == -1)
-			return ResultFactory.buildAuthFailResult("用户未登录");
+			return ResultFactory.buildAuthFailResult("用户未登录或已过期");
 		
-		if(adoptionService.checkRecord(id))return ResultFactory.buildFailResult("已选择候选人！");
+		if(adoptionService.checkRecord(id))return ResultFactory.buildSuccessResult(adoptionService.getCandidateByRecord(id));
 		
 		List<Candidate> candidates = adoptionService.getCandidatesByAID(id);
 		
@@ -325,6 +329,7 @@ public class UserInfoController {
 		int uid = userService.getUidByName(firstHandShake.getUsername());
 		
 		adoptionService.addFirstHandShake(firstHandShake.getaID(), uid);
+		adoptionService.changeState(firstHandShake.getaID(), 6);  // 6为confirming
 		
 		return ResultFactory.buildSuccessResult("成功");
 	}
@@ -335,13 +340,13 @@ public class UserInfoController {
 	public Result AfterFirstHandShake(HttpServletRequest request, HttpServletResponse response){
 		int uid = -1; 
 		try {
-			uid = GeneralUtils.getUidByCookie(request,userService); // 通过Cookie获取用户id
+			uid = GeneralUtils.getUidByCookie(request,userService,userRedisService); // 通过Cookie获取用户id
 		} catch (Exception e) {
 			System.out.println("fuck:" + e.getMessage());
 			e.printStackTrace();
 		}
 		if (uid == -1)
-			return ResultFactory.buildAuthFailResult("用户未登录");
+			return ResultFactory.buildAuthFailResult("用户未登录或已过期");
 		
 		List<Adoption> adoptions = adoptionService.getFirstAdoptions(uid);
 		
@@ -356,10 +361,11 @@ public class UserInfoController {
 		
 		if(secondHandShake.isAgree()) {
 			adoptionService.addSecondHandShake(secondHandShake.getaID());
-			adoptionService.changeState(secondHandShake.getaID(), 5);
+			adoptionService.changeState(secondHandShake.getaID(), 5);  // 5为confirmed
 		}
 		else {
 			adoptionService.deleteRecord(secondHandShake.getaID());
+			adoptionService.changeState(secondHandShake.getaID(), 1);
 		}
 		
 		return ResultFactory.buildSuccessResult("成功");

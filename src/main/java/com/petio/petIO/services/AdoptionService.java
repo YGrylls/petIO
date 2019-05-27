@@ -116,4 +116,8 @@ public class AdoptionService {
 	public List<Adoption> getFirstAdoptions(Integer uid){
 		return mapper.getFirstAdoptions(uid);
 	}
+	
+	public Candidate getCandidateByRecord(Integer aID) {
+		return mapper.getCandidateByRecord(aID);
+	}
 }

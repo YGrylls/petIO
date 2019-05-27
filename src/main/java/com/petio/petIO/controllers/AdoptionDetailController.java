@@ -16,6 +16,7 @@ import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.beans.Result;
 import com.petio.petIO.services.AdoptionService;
+import com.petio.petIO.services.UserRedisService;
 import com.petio.petIO.services.UserService;
 
 @Controller
@@ -25,6 +26,9 @@ public class AdoptionDetailController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	UserRedisService userRedisService;
 
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption/detail/{id}", method = RequestMethod.POST)
@@ -55,13 +59,13 @@ public class AdoptionDetailController {
 		System.out.println("id:" + id);
 		int uid = -1; // 通过Cookie获取用户id
 		try {
-			uid = GeneralUtils.getUidByCookie(request,userService);
+			uid = GeneralUtils.getUidByCookie(request,userService,userRedisService);
 		} catch (Exception e) {
 			System.out.println("fuck:" + e.getMessage());
 			e.printStackTrace();
 		}
 		if (uid == -1)
-			return ResultFactory.buildAuthFailResult("申请失败，您未登录");
+			return ResultFactory.buildAuthFailResult("申请失败，您未登录或已过期");
 
 		if(adoptionService.checkApply(id, uid)) {  //申请过
 			ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);

@@ -6,6 +6,9 @@ import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.petio.petIO.services.UserRedisService;
 import com.petio.petIO.services.UserService;
 
 public class GeneralUtils {
@@ -18,7 +21,7 @@ public class GeneralUtils {
 
 	// 通过cookie获得用户id
 
-	public static Integer getUidByCookie(HttpServletRequest request, UserService userService) {
+	public static Integer getUidByCookie(HttpServletRequest request, UserService userService,UserRedisService userRedisService) {
 
 		if(request == null)return -1;
 
@@ -34,13 +37,16 @@ public class GeneralUtils {
 						String[] token = cookie.getValue().split("_");
 						username = token[0];
 						System.out.println("----" + username + "-----");
+						
+						String sessionId = request.getSession().getId();
+						String currentSessionID = userRedisService.getUserSession(username);
+						if (!username.equals("") && sessionId.equals(currentSessionID)) {
+							System.out.println("aaa");
+							return userService.getUidByName(username);
+						}
 					}
 				}
 			}
-		}
-		if (!username.equals("")) {
-			System.out.println("aaa");
-			return userService.getUidByName(username);
 		}
 		System.out.println("bbb");
 		return -1;

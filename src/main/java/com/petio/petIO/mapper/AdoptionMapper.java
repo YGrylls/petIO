@@ -96,4 +96,7 @@ public interface AdoptionMapper {
 	
 	@Select("select * from Adoption where aID in (select aID from Record where acceptor = #{uid} and stage = 'firstHandShake')")
 	public List<Adoption> getFirstAdoptions(Integer uid);
+	
+	@Select("select userID, username from User where userID in (select acceptor from Record where aID = #{aID})")
+	public Candidate getCandidateByRecord(Integer aID);
 }
