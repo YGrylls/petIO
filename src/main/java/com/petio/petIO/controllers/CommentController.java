@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.petio.petIO.Utils.GeneralUtils;
 import com.petio.petIO.Utils.ResultFactory;
 import com.petio.petIO.beans.CommentInfo;
 import com.petio.petIO.beans.NewCommentInfo;
@@ -34,6 +35,8 @@ public class CommentController {
 		List<CommentInfo> res = commentService.getComment(id);
 		return ResultFactory.buildSuccessResult(res);
 	}
+	
+
 
 	@PostMapping("/api/comment/publish")
 	public Result publishComment(@RequestBody NewCommentInfo newComment, HttpServletRequest request,

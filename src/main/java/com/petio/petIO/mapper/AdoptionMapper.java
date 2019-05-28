@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Update;
 import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.Candidate;
 import com.petio.petIO.beans.ConnectInfo;
+import com.petio.petIO.beans.NewInfo;
 
 @Mapper
 public interface AdoptionMapper {
@@ -23,8 +24,17 @@ public interface AdoptionMapper {
 	public Integer checkApply(Integer aID, Integer uID);
 
 	@Insert("insert into Apply (aID,applier)values(#{aID},#{uID})")
-	public Integer addApply(Integer aID, Integer uID);
-
+	public Integer addApply(Integer aID,Integer uID);
+	
+//	@Update("update Apply set read = 1 where aID = #{aID} and applier = #{uID}")
+//	public Integer readApply(Integer aID, Integer uID);
+	
+	@Update("update Apply set read = 1 where aID = #{aID}")
+	public Integer readApply(Integer aID);
+	
+	@Select("select Adoption.aID, Adoption.aTitle, User.username , applyTime as time from User, Apply inner join Adoption on Apply.aID = Adoption.aID where Adoption.editor = #{uID} and User.userID = Apply.applier")
+	public List<NewInfo> getUnreadApply(Integer uID);
+	
 	@Select("select count(*) from ApplyTimes where uID = #{uID}")
 	public Integer checkApplyTimes(Integer uID);
 
@@ -39,7 +49,13 @@ public interface AdoptionMapper {
 
 	@Update("update Adoption set aRead = aRead + 1 where aID = #{aID}")
 	public Integer updateRead(Integer aID);
-
+	
+	@Update("update Adoption set aRead = aRead - 1 where aID = #{aID}")
+	public Integer deRead(Integer aID);
+	
+	@Select("select aRead from Adoption where where aID = #{aID}")
+	public Integer geteRead(Integer aID);
+	
 	@Update("update Adoption set aRead = 0 where aID = #{aID}")
 	public Integer resetRead(Integer aID);
 
@@ -99,4 +115,6 @@ public interface AdoptionMapper {
 
 	@Select("select userID, username from User where userID in (select acceptor from Record where aID = #{aID})")
 	public Candidate getCandidateByRecord(Integer aID);
+	
+
 }

@@ -17,6 +17,7 @@ import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.beans.Result;
 import com.petio.petIO.services.AdoptionService;
+import com.petio.petIO.services.CommentService;
 import com.petio.petIO.services.UserRedisService;
 import com.petio.petIO.services.UserService;
 
@@ -26,18 +27,30 @@ public class AdoptionDetailController {
 	AdoptionService adoptionService;
 
 	@Autowired
+	CommentService commentService;
+	
+	@Autowired
 	UserService userService;
 
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption/detail/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public Result getDetail(@PathVariable("id") Integer id) {
+	public Result getDetail(@PathVariable("id") Integer id,HttpServletRequest request
+			,HttpServletResponse response) {
 		System.out.println("id:" + id);
 		Adoption adoption = adoptionService.getAdoptionByID(id);
+		int uid = GeneralUtils.getUidByCookie(request,response,userService);
+
 		System.out.println(adoption);
 		if (adoption == null)
 			return ResultFactory.buildFailResult("未找到帖子");
 
+		if (uid == adoption.getEditor()) {
+			adoptionService.resetRead(adoption.getaID());
+			
+			commentService.setAllCommentsRead(id);
+		}
+		
 		if (adoption.getaMoney() == 0)
 			adoption.setFree(true);
 		else
@@ -65,11 +78,12 @@ public class AdoptionDetailController {
 		}
 		if (uid == -1)
 			return ResultFactory.buildAuthFailResult("申请失败，您未登录或已过期");
-
-		if(adoptionService.checkApply(id, uid)) {  //申请过
-			ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);
-			Adoption adoption = adoptionService.getAdoptionByID(id);
-			connectInfo.setUsername(userService.getUsernameByID(adoption.getEditor()));
+		
+		ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);
+		Adoption adoption = adoptionService.getAdoptionByID(id);
+		connectInfo.setUsername(userService.getUsernameByID(adoption.getEditor()));
+		
+		if(adoption.getEditor() == uid || adoptionService.checkApply(id, uid)) { //以前申请过该帖或者自己是帖子主
 			return ResultFactory.buildSuccessResult(connectInfo);
 		}
 		
@@ -83,10 +97,6 @@ public class AdoptionDetailController {
 			adoptionService.addApplyTimes(uid); // 增加今日申请次数
 			adoptionService.updateRead(id);
 		}
-		
-		ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);
-		Adoption adoption = adoptionService.getAdoptionByID(id);
-		connectInfo.setUsername(userService.getUsernameByID(adoption.getEditor()));
 		
 		return ResultFactory.buildSuccessResult(connectInfo);
 	}
