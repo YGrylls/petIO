@@ -51,8 +51,8 @@ public class AdoptionService {
 	}
 	
 	
-	public Integer readApply(Integer aID, Integer uID) {
-		return mapper.readApply( aID,  uID);
+	public Integer readApplyByAID(Integer aID) {
+		return mapper.readApply( aID);
 	}
 	
 	public List<NewInfo> getUnreadApply(Integer uID) {
