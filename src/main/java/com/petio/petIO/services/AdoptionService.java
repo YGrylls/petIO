@@ -120,4 +120,6 @@ public class AdoptionService {
 	public Candidate getCandidateByRecord(Integer aID) {
 		return mapper.getCandidateByRecord(aID);
 	}
+	
+	
 }

@@ -31,9 +31,14 @@ public class AdoptionDetailController {
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption/detail/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public Result getDetail(@PathVariable("id") Integer id) {
+	public Result getDetail(@PathVariable("id") Integer id,HttpServletRequest request
+			,HttpServletResponse response) {
 		System.out.println("id:" + id);
 		Adoption adoption = adoptionService.getAdoptionByID(id);
+		int uid = GeneralUtils.getUidByCookie(request,response,userService);
+		if (uid == adoption.getEditor()) {
+			adoptionService.resetRead(adoption.getaID());
+		}
 		System.out.println(adoption);
 		if (adoption == null)
 			return ResultFactory.buildFailResult("未找到帖子");

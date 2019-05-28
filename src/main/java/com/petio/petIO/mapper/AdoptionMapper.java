@@ -40,6 +40,12 @@ public interface AdoptionMapper {
 	@Update("update Adoption set aRead = aRead + 1 where aID = #{aID}")
 	public Integer updateRead(Integer aID);
 	
+	@Update("update Adoption set aRead = aRead - 1 where aID = #{aID}")
+	public Integer deRead(Integer aID);
+	
+	@Select("select aRead from Adoption where where aID = #{aID}")
+	public Integer geteRead(Integer aID);
+	
 	@Update("update Adoption set aRead = 0 where aID = #{aID}")
 	public Integer resetRead(Integer aID);
 	
@@ -99,4 +105,6 @@ public interface AdoptionMapper {
 	
 	@Select("select userID, username from User where userID in (select acceptor from Record where aID = #{aID})")
 	public Candidate getCandidateByRecord(Integer aID);
+	
+
 }
