@@ -5,12 +5,15 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 import java.sql.Date;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.Candidate;
 import com.petio.petIO.beans.ConnectInfo;
+import com.petio.petIO.beans.NewInfo;
 import com.petio.petIO.mapper.AdoptionMapper;
 
 @Service
@@ -45,6 +48,15 @@ public class AdoptionService {
 			mapper.addApplyTimes(uID);
 		}
 		return 1;
+	}
+	
+	
+	public Integer readApply(Integer aID, Integer uID) {
+		return mapper.readApply( aID,  uID);
+	}
+	
+	public List<NewInfo> getUnreadApply(Integer uID) {
+		return mapper.getUnreadApply(uID);
 	}
 	
 	public void initApplyTimes() {

@@ -17,6 +17,7 @@ import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.beans.Result;
 import com.petio.petIO.services.AdoptionService;
+import com.petio.petIO.services.CommentService;
 import com.petio.petIO.services.UserRedisService;
 import com.petio.petIO.services.UserService;
 
@@ -25,6 +26,9 @@ public class AdoptionDetailController {
 	@Autowired
 	AdoptionService adoptionService;
 
+	@Autowired
+	CommentService commentService;
+	
 	@Autowired
 	UserService userService;
 
@@ -36,13 +40,17 @@ public class AdoptionDetailController {
 		System.out.println("id:" + id);
 		Adoption adoption = adoptionService.getAdoptionByID(id);
 		int uid = GeneralUtils.getUidByCookie(request,response,userService);
-		if (uid == adoption.getEditor()) {
-			adoptionService.resetRead(adoption.getaID());
-		}
+
 		System.out.println(adoption);
 		if (adoption == null)
 			return ResultFactory.buildFailResult("未找到帖子");
 
+		if (uid == adoption.getEditor()) {
+			adoptionService.resetRead(adoption.getaID());
+			
+			commentService.setAllCommentsRead(id);
+		}
+		
 		if (adoption.getaMoney() == 0)
 			adoption.setFree(true);
 		else

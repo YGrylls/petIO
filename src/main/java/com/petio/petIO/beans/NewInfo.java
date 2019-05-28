@@ -53,6 +53,24 @@ public class NewInfo {
 	public void setTime(Time time) {
 		this.time = time;
 	}
+	public NewInfo() {}
+
+	public NewInfo(int aID, String aTitle, String username, String content, Time time) {
+		super();
+		this.aID = aID;
+		this.aTitle = aTitle;
+		this.username = username;
+		this.content = content;
+		this.time = time;
+	}
+
+	public NewInfo(int aID, String aTitle, String username, Time time) {
+		super();
+		this.aID = aID;
+		this.aTitle = aTitle;
+		this.username = username;
+		this.time = time;
+	}
 	
 	
 }

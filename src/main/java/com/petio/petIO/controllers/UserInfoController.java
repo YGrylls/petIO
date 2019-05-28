@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,14 +28,17 @@ import com.petio.petIO.Utils.GeneralUtils;
 import com.petio.petIO.Utils.ResultFactory;
 import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.Candidate;
+import com.petio.petIO.beans.CommentInfo;
 import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.beans.FirstHandShake;
+import com.petio.petIO.beans.NewInfo;
 import com.petio.petIO.beans.PasswordInfo;
 import com.petio.petIO.beans.PersonInfo;
 import com.petio.petIO.beans.Result;
 import com.petio.petIO.beans.SecondHandShake;
 import com.petio.petIO.beans.User;
 import com.petio.petIO.services.AdoptionService;
+import com.petio.petIO.services.CommentService;
 import com.petio.petIO.services.UserRedisService;
 import com.petio.petIO.services.UserService;
 import com.petio.petIO.services.VerifyService;
@@ -43,6 +47,9 @@ import com.petio.petIO.services.VerifyService;
 public class UserInfoController {
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	CommentService commentService;
 	
 	@Autowired
 	AdoptionService adoptionService;
@@ -325,6 +332,7 @@ public class UserInfoController {
 		if(adoptionService.checkRecord(id))return ResultFactory.buildSuccessResult(adoptionService.getCandidateByRecord(id));
 		
 		List<Candidate> candidates = adoptionService.getCandidatesByAID(id);
+		adoptionService.resetRead(id);
 		
 		return ResultFactory.buildSuccessResult(candidates);
 	}
@@ -399,5 +407,25 @@ public class UserInfoController {
 		}
 		
 		return ResultFactory.buildSuccessResult("成功");
+	}
+	
+	@GetMapping("/api/comment/unread")
+	public Result getUnreadComment(HttpServletRequest request,HttpServletResponse response) {
+		int uid = GeneralUtils.getUidByCookie(request,response,userService);
+		if (uid == -1) {
+			return ResultFactory.buildFailResult("未登录");
+		}
+		List<NewInfo> res = commentService.getUnreadComment(uid);
+		return ResultFactory.buildSuccessResult(res);
+	}
+	
+	@GetMapping("/api/apply/unread")
+	public Result getUnreadApply(HttpServletRequest request,HttpServletResponse response) {
+		int uid = GeneralUtils.getUidByCookie(request,response,userService);
+		if (uid == -1) {
+			return ResultFactory.buildFailResult("未登录");
+		}
+		List<NewInfo> res = adoptionService.getUnreadApply(uid);
+		return ResultFactory.buildSuccessResult(res);
 	}
 }
