@@ -1,6 +1,7 @@
 package com.petio.petIO.controllers;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,9 +27,6 @@ public class AdoptionDetailController {
 
 	@Autowired
 	UserService userService;
-	
-	@Autowired
-	UserRedisService userRedisService;
 
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption/detail/{id}", method = RequestMethod.POST)
@@ -55,11 +53,12 @@ public class AdoptionDetailController {
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption/apply/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public Result Apply(@PathVariable("id") Integer id, HttpServletRequest request) {
+	public Result Apply(@PathVariable("id") Integer id, HttpServletRequest request
+			,HttpServletResponse response) {
 		System.out.println("id:" + id);
 		int uid = -1; // 通过Cookie获取用户id
 		try {
-			uid = GeneralUtils.getUidByCookie(request,userService,userRedisService);
+			uid = GeneralUtils.getUidByCookie(request,response,userService);
 		} catch (Exception e) {
 			System.out.println("fuck:" + e.getMessage());
 			e.printStackTrace();

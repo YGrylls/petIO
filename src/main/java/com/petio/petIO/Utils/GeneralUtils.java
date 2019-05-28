@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.petio.petIO.beans.User;
 import com.petio.petIO.services.UserRedisService;
 import com.petio.petIO.services.UserService;
 
@@ -21,35 +23,11 @@ public class GeneralUtils {
 
 	// 通过cookie获得用户id
 
-	public static Integer getUidByCookie(HttpServletRequest request, UserService userService,UserRedisService userRedisService) {
+	public static Integer getUidByCookie(HttpServletRequest request, HttpServletResponse response, UserService userService) {
 
-		if(request == null)return -1;
-
-		String username = "";
-		Cookie[] cookies = request.getCookies();
-		if (null != cookies) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("loginStatus")) {
-					if (null != cookie.getValue() && !"".equals(cookie.getValue())) {
-						/**
-						 * check user
-						 */
-						String[] token = cookie.getValue().split("_");
-						username = token[0];
-						System.out.println("----" + username + "-----");
-						
-						String sessionId = request.getSession().getId();
-						String currentSessionID = userRedisService.getUserSession(username);
-						if (!username.equals("") && sessionId.equals(currentSessionID)) {
-							System.out.println("aaa");
-							return userService.getUidByName(username);
-						}
-					}
-				}
-			}
-		}
-		System.out.println("bbb");
-		return -1;
+		User user = userService.getCurrentUser(request, response);
+		if(user == null)return -1;
+		else return userService.getUidByName(user.getUsername());
 	}
 
 }
