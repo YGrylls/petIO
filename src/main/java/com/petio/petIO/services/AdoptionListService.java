@@ -9,11 +9,15 @@ import org.springframework.stereotype.Service;
 import com.petio.petIO.beans.Adoption;
 import com.petio.petIO.beans.AdoptionInfo;
 import com.petio.petIO.mapper.AdoptionListMapper;
+import com.petio.petIO.mapper.AdoptionMapper;
 import com.petio.petIO.mapper.UserMapper;
 @Service
 public class AdoptionListService {
 	@Autowired
 	private AdoptionListMapper mapper;
+	
+	@Autowired
+	private AdoptionMapper adoptionMapper;
 	@Autowired
 	private UserMapper userMapper;
 	
@@ -24,6 +28,7 @@ public class AdoptionListService {
 		
 		for (Adoption adoption : rawList) {
 			String username = userMapper.getUsernameByID(adoption.getEditor());
+			
 			results.add(new AdoptionInfo(adoption.getaID(),
 										username	, 
 										adoption.getaTitle(),
@@ -34,7 +39,7 @@ public class AdoptionListService {
 										adoption.getaRead(), 
 										adoption.getExpireDate(), 
 										adoption.getaState(), 
-										adoption.getImgPaths()));
+										adoptionMapper.getImgPaths(adoption.getaID())));
 		}
 		return results;
 	}
