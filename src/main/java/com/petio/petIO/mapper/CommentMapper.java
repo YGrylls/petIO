@@ -22,10 +22,10 @@ public interface CommentMapper {
 	@Select("select count(*) from User , Comment , Adoption where Comment.to = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID")
 	public Integer getUnreadCommentsNumberByuserID(Integer userID);
 	
-	@Update("UPDATE Comment set read = 1 where aID = #{aID}")
+	@Update("UPDATE Comment set Comment.read = 1 where aID = #{aID}")
 	public Integer setAllCommentsRead(Integer aID);
 	
-	@Update("UPDATE Comment set read = 1 where aID = #{aID} and cID = #{cID}")
+	@Update("UPDATE Comment set Comment.read = 1 where aID = #{aID} and cID = #{cID}")
 	public Integer setSingleCommentRead(Integer aID,Integer cID);
 	
 	@Insert("insert into Comment (commentText,`from`,`to`,aID)values(#{commentText},#{from},#{to},#{aID})")
