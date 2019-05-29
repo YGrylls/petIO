@@ -78,11 +78,12 @@ public class AdoptionDetailController {
 		}
 		if (uid == -1)
 			return ResultFactory.buildAuthFailResult("申请失败，您未登录或已过期");
-
-		if(adoptionService.checkApply(id, uid)) {  //申请过
-			ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);
-			Adoption adoption = adoptionService.getAdoptionByID(id);
-			connectInfo.setUsername(userService.getUsernameByID(adoption.getEditor()));
+		
+		ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);
+		Adoption adoption = adoptionService.getAdoptionByID(id);
+		connectInfo.setUsername(userService.getUsernameByID(adoption.getEditor()));
+		
+		if(adoption.getEditor() == uid || adoptionService.checkApply(id, uid)) { //以前申请过该帖或者自己是帖子主
 			return ResultFactory.buildSuccessResult(connectInfo);
 		}
 		
@@ -96,10 +97,6 @@ public class AdoptionDetailController {
 			adoptionService.addApplyTimes(uid); // 增加今日申请次数
 			adoptionService.updateRead(id);
 		}
-		
-		ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);
-		Adoption adoption = adoptionService.getAdoptionByID(id);
-		connectInfo.setUsername(userService.getUsernameByID(adoption.getEditor()));
 		
 		return ResultFactory.buildSuccessResult(connectInfo);
 	}
