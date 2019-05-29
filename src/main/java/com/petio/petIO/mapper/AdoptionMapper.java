@@ -29,7 +29,7 @@ public interface AdoptionMapper {
 //	@Update("update Apply set read = 1 where aID = #{aID} and applier = #{uID}")
 //	public Integer readApply(Integer aID, Integer uID);
 
-	@Update("update Apply set read = 1 where aID = #{aID}")
+	@Update("update Apply set Apply.read = 1 where aID = #{aID}")
 	public Integer readApply(Integer aID);
 
 	@Select("select count(*) from User, Apply inner join Adoption on Apply.aID = Adoption.aID where Adoption.editor = #{uID} and User.userID = Apply.applier")
