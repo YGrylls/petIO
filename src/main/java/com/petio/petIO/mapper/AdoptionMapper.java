@@ -32,6 +32,9 @@ public interface AdoptionMapper {
 	@Update("update Apply set read = 1 where aID = #{aID}")
 	public Integer readApply(Integer aID);
 	
+	@Select("select count(*) from User, Apply inner join Adoption on Apply.aID = Adoption.aID where Adoption.editor = #{uID} and User.userID = Apply.applier")
+	public Integer getUnreadApplyNumber(Integer uID);
+	
 	@Select("select Adoption.aID, Adoption.aTitle, User.username , applyTime as time from User, Apply inner join Adoption on Apply.aID = Adoption.aID where Adoption.editor = #{uID} and User.userID = Apply.applier")
 	public List<NewInfo> getUnreadApply(Integer uID);
 	

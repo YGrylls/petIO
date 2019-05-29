@@ -31,6 +31,7 @@ import com.petio.petIO.beans.Candidate;
 import com.petio.petIO.beans.CommentInfo;
 import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.beans.FirstHandShake;
+import com.petio.petIO.beans.ListData;
 import com.petio.petIO.beans.NewInfo;
 import com.petio.petIO.beans.PasswordInfo;
 import com.petio.petIO.beans.PersonInfo;
@@ -416,7 +417,8 @@ public class UserInfoController {
 			return ResultFactory.buildFailResult("未登录");
 		}
 		List<NewInfo> res = commentService.getUnreadComment(uid);
-		return ResultFactory.buildSuccessResult(res);
+		
+		return ResultFactory.buildSuccessResult(new ListData(res.size(), res));
 	}
 	
 	@GetMapping("/api/apply/unread")
@@ -426,6 +428,6 @@ public class UserInfoController {
 			return ResultFactory.buildFailResult("未登录");
 		}
 		List<NewInfo> res = adoptionService.getUnreadApply(uid);
-		return ResultFactory.buildSuccessResult(res);
+		return ResultFactory.buildSuccessResult(new ListData(res.size(), res));
 	}
 }

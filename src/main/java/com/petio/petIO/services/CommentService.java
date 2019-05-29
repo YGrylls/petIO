@@ -44,7 +44,9 @@ public class CommentService {
 	}
 	public List<NewInfo> getUnreadComment(Integer userID) {
 		return commentMapper.getUnreadCommentsByuserID(userID);
-		
+	}
+	public int getUnreadCommentsNumber(Integer userID) {
+		return commentMapper.getUnreadCommentsNumberByuserID(userID);
 	}
 	
 	public Integer setAllCommentsRead(Integer aID) {

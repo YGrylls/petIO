@@ -19,6 +19,9 @@ public interface CommentMapper {
 	@Select("select Comment.aID, aTitle, username , commentText as content , pubtime as time from User , Comment , Adoption where Comment.to = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID")
 	public List<NewInfo> getUnreadCommentsByuserID(Integer userID);
 	
+	@Select("select count(*) from User , Comment , Adoption where Comment.to = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID")
+	public Integer getUnreadCommentsNumberByuserID(Integer userID);
+	
 	@Update("UPDATE Comment set read = 1 where aID = #{aID}")
 	public Integer setAllCommentsRead(Integer aID);
 	
