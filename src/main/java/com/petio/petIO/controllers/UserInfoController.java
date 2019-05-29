@@ -410,7 +410,9 @@ public class UserInfoController {
 		return ResultFactory.buildSuccessResult("成功");
 	}
 	
-	@GetMapping("/api/comment/unread")
+	@CrossOrigin
+	@RequestMapping(value = "/api/comment/unread", method = RequestMethod.GET)
+	@ResponseBody
 	public Result getUnreadComment(HttpServletRequest request,HttpServletResponse response) {
 		int uid = GeneralUtils.getUidByCookie(request,response,userService);
 		if (uid == -1) {
@@ -421,7 +423,9 @@ public class UserInfoController {
 		return ResultFactory.buildSuccessResult(new ListData(res.size(), res));
 	}
 	
-	@GetMapping("/api/apply/unread")
+	@CrossOrigin
+	@RequestMapping(value = "/api/apply/unread", method = RequestMethod.GET)
+	@ResponseBody
 	public Result getUnreadApply(HttpServletRequest request,HttpServletResponse response) {
 		int uid = GeneralUtils.getUidByCookie(request,response,userService);
 		if (uid == -1) {
