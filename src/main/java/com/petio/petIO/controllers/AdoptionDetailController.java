@@ -18,7 +18,6 @@ import com.petio.petIO.beans.ConnectInfo;
 import com.petio.petIO.beans.Result;
 import com.petio.petIO.services.AdoptionService;
 import com.petio.petIO.services.CommentService;
-import com.petio.petIO.services.UserRedisService;
 import com.petio.petIO.services.UserService;
 
 @Controller
@@ -28,18 +27,17 @@ public class AdoptionDetailController {
 
 	@Autowired
 	CommentService commentService;
-	
+
 	@Autowired
 	UserService userService;
 
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption/detail/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public Result getDetail(@PathVariable("id") Integer id,HttpServletRequest request
-			,HttpServletResponse response) {
+	public Result getDetail(@PathVariable("id") Integer id, HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("id:" + id);
 		Adoption adoption = adoptionService.getAdoptionByID(id);
-		int uid = GeneralUtils.getUidByCookie(request,response,userService);
+		int uid = GeneralUtils.getUidByCookie(request, response, userService);
 
 		System.out.println(adoption);
 		if (adoption == null)
@@ -47,15 +45,15 @@ public class AdoptionDetailController {
 
 		if (uid == adoption.getEditor()) {
 			adoptionService.resetRead(adoption.getaID());
-			
+
 			commentService.setAllCommentsRead(id);
 		}
-		
+
 		if (adoption.getaMoney() == 0)
 			adoption.setFree(true);
 		else
 			adoption.setFree(false);
-		
+
 		adoption.setImgPaths(adoptionService.getImgPaths(id)); // 获取图片路径
 
 		System.out.println(adoption);
@@ -66,38 +64,36 @@ public class AdoptionDetailController {
 	@CrossOrigin
 	@RequestMapping(value = "/api/adoption/apply/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public Result Apply(@PathVariable("id") Integer id, HttpServletRequest request
-			,HttpServletResponse response) {
+	public Result Apply(@PathVariable("id") Integer id, HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("id:" + id);
 		int uid = -1; // 通过Cookie获取用户id
 		try {
-			uid = GeneralUtils.getUidByCookie(request,response,userService);
+			uid = GeneralUtils.getUidByCookie(request, response, userService);
 		} catch (Exception e) {
 			System.out.println("fuck:" + e.getMessage());
 			e.printStackTrace();
 		}
 		if (uid == -1)
 			return ResultFactory.buildAuthFailResult("申请失败，您未登录或已过期");
-		
+
 		ConnectInfo connectInfo = adoptionService.getCommunicationByID(id);
 		Adoption adoption = adoptionService.getAdoptionByID(id);
 		connectInfo.setUsername(userService.getUsernameByID(adoption.getEditor()));
-		
-		if(adoption.getEditor() == uid || adoptionService.checkApply(id, uid)) { //以前申请过该帖或者自己是帖子主
+
+		if (adoption.getEditor() == uid || adoptionService.checkApply(id, uid)) { // 以前申请过该帖或者自己是帖子主
 			return ResultFactory.buildSuccessResult(connectInfo);
 		}
-		
+
 		int times = adoptionService.getApplyTimes(uid); // 获取用户当前申请次数
 		if (times > 3)
 			return ResultFactory.buildFailResult("超过今日申请次数！");
 
-		
 		if (!adoptionService.checkApply(id, uid)) { // 没申请过
 			adoptionService.addApply(id, uid);
 			adoptionService.addApplyTimes(uid); // 增加今日申请次数
 			adoptionService.updateRead(id);
 		}
-		
+
 		return ResultFactory.buildSuccessResult(connectInfo);
 	}
 }

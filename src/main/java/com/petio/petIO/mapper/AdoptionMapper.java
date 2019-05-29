@@ -24,20 +24,20 @@ public interface AdoptionMapper {
 	public Integer checkApply(Integer aID, Integer uID);
 
 	@Insert("insert into Apply (aID,applier)values(#{aID},#{uID})")
-	public Integer addApply(Integer aID,Integer uID);
-	
+	public Integer addApply(Integer aID, Integer uID);
+
 //	@Update("update Apply set read = 1 where aID = #{aID} and applier = #{uID}")
 //	public Integer readApply(Integer aID, Integer uID);
-	
+
 	@Update("update Apply set read = 1 where aID = #{aID}")
 	public Integer readApply(Integer aID);
-	
+
 	@Select("select count(*) from User, Apply inner join Adoption on Apply.aID = Adoption.aID where Adoption.editor = #{uID} and User.userID = Apply.applier")
 	public Integer getUnreadApplyNumber(Integer uID);
-	
+
 	@Select("select Adoption.aID, Adoption.aTitle, User.username , applyTime as time from User, Apply inner join Adoption on Apply.aID = Adoption.aID where Adoption.editor = #{uID} and User.userID = Apply.applier")
 	public List<NewInfo> getUnreadApply(Integer uID);
-	
+
 	@Select("select count(*) from ApplyTimes where uID = #{uID}")
 	public Integer checkApplyTimes(Integer uID);
 
@@ -52,13 +52,13 @@ public interface AdoptionMapper {
 
 	@Update("update Adoption set aRead = aRead + 1 where aID = #{aID}")
 	public Integer updateRead(Integer aID);
-	
+
 	@Update("update Adoption set aRead = aRead - 1 where aID = #{aID}")
 	public Integer deRead(Integer aID);
-	
+
 	@Select("select aRead from Adoption where where aID = #{aID}")
 	public Integer geteRead(Integer aID);
-	
+
 	@Update("update Adoption set aRead = 0 where aID = #{aID}")
 	public Integer resetRead(Integer aID);
 
@@ -95,7 +95,7 @@ public interface AdoptionMapper {
 	@Select("select communicationType,communication from Adoption where aID = #{aID}")
 	public ConnectInfo getCommunicationByID(Integer aID);
 
-	@Select("select * from Adoption where aID in (select aID from Apply where applier = #{uid}) and (aState = 1 or aState = 6) and editor <> #{uid}")
+	@Select("select * from Adoption where aID in (select aID from Apply where applier = #{uid}) and (aState = 1 or aState = 6 or aState = 5) and editor <> #{uid}")
 	public List<Adoption> getAdoptionsByApply(Integer uid);
 
 	@Select("select userID, username from User where userID in (select applier from Apply where aID = #{aID})")
@@ -118,6 +118,5 @@ public interface AdoptionMapper {
 
 	@Select("select userID, username from User where userID in (select acceptor from Record where aID = #{aID})")
 	public Candidate getCandidateByRecord(Integer aID);
-	
 
 }
