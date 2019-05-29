@@ -4,7 +4,7 @@ public class SqlProvider {
 	private int noteNumber = 20;
 
 	public String getAdoptionTotalNumber(String title, String location, String type) {
-		StringBuffer sql = new StringBuffer("select count(*) from Adoption where aState = 1 or aState = 5");
+		StringBuffer sql = new StringBuffer("select count(*) from Adoption where aState = 1");
 		if (!"All".equals(location)) {
 			sql.append(" and location=#{location}");
 		}
@@ -20,7 +20,7 @@ public class SqlProvider {
 	}
 
 	public String getAdoption(String title, String location, String type, Integer page) {
-		StringBuffer sql = new StringBuffer("select * from Adoption where aState = 1 or aState = 5");
+		StringBuffer sql = new StringBuffer("select * from Adoption where aState = 1");
 		if (!"All".equals(location)) {
 			sql.append(" and location=#{location}");
 		}
