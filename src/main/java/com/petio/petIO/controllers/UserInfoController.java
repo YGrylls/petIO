@@ -210,6 +210,10 @@ public class UserInfoController {
 		
 		System.out.println("id:" + id);
 		Adoption adoption = adoptionService.getAdoptionByID(id);
+		
+		if(adoption.getaState() != 1 && adoption.getaState() != 4)
+			return ResultFactory.buildAuthFailResult("续期失败，确认中或者已完成的帖子无法续期!");
+		
 		System.out.println(adoption);
 		
 		Date date = new Date();
