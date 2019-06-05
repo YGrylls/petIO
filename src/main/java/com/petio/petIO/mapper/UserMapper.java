@@ -16,10 +16,10 @@ public interface UserMapper {
 
 	@Select("select userID from User where username = #{username}")
 	public Integer getUidByName(String username);
-	
+
 	@Select("select count(aRead) from Adoption where editor = #{userID}")
 	public Integer getNewByID(int userID);
-	
+
 	@Select("select username from User where userID = #{userID}")
 	public String getUsernameByID(int userID);
 
@@ -43,4 +43,10 @@ public interface UserMapper {
 
 	@Update("update User set password = #{newpass} where userMail = #{mail}")
 	public Integer changePasswordByMail(String mail, String newpass);
+
+	public Integer getAdoptionCountByID(Integer uid);
+
+	public Integer getCompleteAdoptionCountByID(Integer uid);
+
+	public Integer getCompleteApplyCountByID(Integer uid);
 }
