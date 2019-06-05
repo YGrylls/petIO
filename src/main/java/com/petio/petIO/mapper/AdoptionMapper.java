@@ -32,6 +32,9 @@ public interface AdoptionMapper {
 	@Update("update Apply set Apply.read = 1 where aID = #{aID}")
 	public Integer readApply(Integer aID);
 
+	@Update("update Apply set Apply.read = 1 where aID = #{aID} and applier = #{applier}")
+	public Integer readUserApply(Integer aID,Integer applier);
+	
 	@Select("select count(*) from User, Apply inner join Adoption on Apply.aID = Adoption.aID where Adoption.editor = #{uID} and User.userID = Apply.applier")
 	public Integer getUnreadApplyNumber(Integer uID);
 

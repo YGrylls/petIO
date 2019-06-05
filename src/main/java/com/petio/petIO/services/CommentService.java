@@ -52,10 +52,12 @@ public class CommentService {
 	}
 	
 	public Integer setAllCommentsRead(Integer aID) {
+		commentMapper.setAllCommentsOwnerRead(aID);
 		return commentMapper.setAllCommentsRead(aID);
 	}
 	
 	public Integer setSingleCommentRead(Integer aID,Integer cID) {
+		commentMapper.setSingleCommentOwnerRead(aID, cID);
 		return commentMapper.setSingleCommentRead(aID,cID);
 	}
 	

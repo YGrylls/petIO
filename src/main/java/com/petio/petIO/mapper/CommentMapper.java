@@ -51,8 +51,14 @@ public interface CommentMapper {
 	@Update("UPDATE Comment set Comment.read = 1 where aID = #{aID}")
 	public Integer setAllCommentsRead(Integer aID);
 	
+	@Update("UPDATE Comment set Comment.aRead = 1 where aID = #{aID}")
+	public Integer setAllCommentsOwnerRead(Integer aID);
+	
 	@Update("UPDATE Comment set Comment.read = 1 where aID = #{aID} and cID = #{cID}")
 	public Integer setSingleCommentRead(Integer aID,Integer cID);
+	
+	@Update("UPDATE Comment set Comment.aRead = 1 where aID = #{aID} and cID = #{cID}")
+	public Integer setSingleCommentOwnerRead(Integer aID,Integer cID);
 	
 	@Insert("insert into Comment (commentText,`from`,`to`,aID)values(#{commentText},#{from},#{to},#{aID})")
 	public Integer addCommentWithTo(String commentText, Integer from, Integer to, Integer aID);
