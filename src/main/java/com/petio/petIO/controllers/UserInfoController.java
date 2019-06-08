@@ -438,4 +438,28 @@ public class UserInfoController {
 		List<NewInfo> res = adoptionService.getUnreadApply(uid);
 		return ResultFactory.buildSuccessResult(new ListData(res.size(), res));
 	}
+	@CrossOrigin
+	@RequestMapping(value = "/api/comment/reset", method = RequestMethod.POST)
+	@ResponseBody
+	public Result resetUnreadComment(HttpServletRequest request,HttpServletResponse response) {
+		int uid = GeneralUtils.getUidByCookie(request,response,userService);
+		if (uid == -1) {
+			return ResultFactory.buildFailResult("未登录");
+		}
+		commentService.resetAllComments(uid);
+		
+		return ResultFactory.buildSuccessResult("reset successfully");
+	}
+	
+	@CrossOrigin
+	@RequestMapping(value = "/api/apply/reset", method = RequestMethod.POST)
+	@ResponseBody
+	public Result resetUnreadApply(HttpServletRequest request,HttpServletResponse response) {
+		int uid = GeneralUtils.getUidByCookie(request,response,userService);
+		if (uid == -1) {
+			return ResultFactory.buildFailResult("未登录");
+		}
+		adoptionService.resetApply(uid);
+		return ResultFactory.buildSuccessResult("reset successfully");
+	}
 }

@@ -55,6 +55,10 @@ public class CommentService {
 		commentMapper.setAllCommentsOwnerRead(aID);
 		return commentMapper.setAllCommentsRead(aID);
 	}
+	public Integer resetAllComments(Integer uID) {
+		commentMapper.resetAllCommentsOwnerRead(uID);
+		return commentMapper.resetCommentsRead(uID);
+	}
 	
 	public Integer setSingleCommentRead(Integer aID,Integer cID) {
 		commentMapper.setSingleCommentOwnerRead(aID, cID);

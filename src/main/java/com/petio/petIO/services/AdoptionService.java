@@ -64,7 +64,9 @@ public class AdoptionService {
 	public int getUnreadApplyNumber(Integer uID) {
 		return mapper.getUnreadApplyNumber(uID);
 	}
-	
+	public void resetApply(Integer uID) {
+		mapper.resetApply(uID);
+	}
 	public void initApplyTimes() {
 		mapper.initApplyTimes();
 	}
