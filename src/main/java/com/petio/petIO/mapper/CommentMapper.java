@@ -20,11 +20,11 @@ public interface CommentMapper {
 	@Select("select * from "
 			+ " (select Comment.aID, aTitle, username , commentText as content , pubtime as time "
 			+ " from User , Comment , Adoption "
-			+ " where Comment.to = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID ) "
+			+ " where Comment.to = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID  "
 			+ " union "
-			+ " (select Comment.aID, aTitle, username , commentText as content , pubtime as time "
+			+ " select Comment.aID, aTitle, username , commentText as content , pubtime as time "
 			+ " from User , Comment , Adoption "
-			+ " where Adoption.editor = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID ) "
+			+ " where Adoption.editor = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID ) as a"
 			+ "order by time ")
 	public List<NewInfo> getUnreadComments(Integer userID);
 	
@@ -40,11 +40,11 @@ public interface CommentMapper {
 	@Select("select count(*) from "
 			+ " (select Comment.aID, aTitle, username , commentText as content , pubtime as time "
 			+ " from User , Comment , Adoption "
-			+ " where Comment.to = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID ) "
+			+ " where Comment.to = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID  "
 			+ " union "
-			+ " (select Comment.aID, aTitle, username , commentText as content , pubtime as time "
+			+ " select Comment.aID, aTitle, username , commentText as content , pubtime as time "
 			+ " from User , Comment , Adoption "
-			+ " where Adoption.editor = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID ) "
+			+ " where Adoption.editor = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID ) as a "
 			+ "order by time ")
 	public Integer getUnreadCommentsNumber(Integer userID);
 	
