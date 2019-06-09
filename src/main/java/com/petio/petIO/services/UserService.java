@@ -137,11 +137,25 @@ public class UserService {
 	public String getUsernameByID(int userID) {
 		return userMapper.getUsernameByID(userID);
 	}
+
 	public Integer getNewByName(String username) {
 		int userID = userMapper.getUidByName(username);
 		return userMapper.getNewByID(userID);
 	}
+
 	public Integer getNewByID(int userID) {
 		return userMapper.getNewByID(userID);
+	}
+
+	public Integer getAdoptionCount(int userID) {
+		return userMapper.getAdoptionCountByID(userID);
+	}
+
+	public Integer getCompleteAdoptionCount(int userID) {
+		return userMapper.getCompleteAdoptionCountByID(userID);
+	}
+
+	public Integer getCompleteApplyCount(int userID) {
+		return userMapper.getCompleteApplyCountByID(userID);
 	}
 }
