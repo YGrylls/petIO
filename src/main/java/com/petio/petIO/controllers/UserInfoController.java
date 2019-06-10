@@ -408,10 +408,35 @@ public class UserInfoController {
 		}
 		else {
 			adoptionService.deleteRecord(secondHandShake.getaID());
-			adoptionService.changeState(secondHandShake.getaID(), 1);
+			
+			Adoption adoption = adoptionService.getAdoptionByID(secondHandShake.getaID());
+			Date date = new Date();
+			if(date.getTime()<adoption.getExpireDate().getTime())
+				adoptionService.changeState(secondHandShake.getaID(), 1);  //没过期
+			else
+				adoptionService.changeState(secondHandShake.getaID(), 4);  //过期
 		}
 		
 		return ResultFactory.buildSuccessResult("成功");
+	}
+	
+	@CrossOrigin
+	@RequestMapping(value = "/api/userinfo/AfterSecond", method = RequestMethod.GET)
+	@ResponseBody
+	public Result AfterSecondHandShake(HttpServletRequest request, HttpServletResponse response){
+		int uid = -1; 
+		try {
+			uid = GeneralUtils.getUidByCookie(request,response,userService); // 通过Cookie获取用户id
+		} catch (Exception e) {
+			System.out.println("fuck:" + e.getMessage());
+			e.printStackTrace();
+		}
+		if (uid == -1)
+			return ResultFactory.buildAuthFailResult("用户未登录或已过期");
+		
+		List<Adoption> adoptions = adoptionService.getSecondAdoptions(uid);
+		
+		return ResultFactory.buildSuccessResult(adoptions);
 	}
 	
 	@CrossOrigin

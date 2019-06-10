@@ -141,5 +141,8 @@ public class AdoptionService {
 		return mapper.getCandidateByRecord(aID);
 	}
 	
+	public List<Adoption> getSecondAdoptions(Integer uid){
+		return mapper.getSecondAdoptions(uid);
+	}
 	
 }
