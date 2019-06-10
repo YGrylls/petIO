@@ -31,18 +31,41 @@ public interface AdoptionMapper {
 
 	@Update("update Apply set Apply.read = 1 where aID = #{aID}")
 	public Integer readApply(Integer aID);
-
-	@Update("update Apply set Apply.read = 1 where Apply.aID in (select Adoption.aID from Adoption where editor = #{uID})")
-	public Integer resetApply(Integer uID);
+	
+	@Update("update Apply set Apply.aRead = 1 where applier = #{applier})")
+	public Integer resetApply(Integer applier);
+	
+	@Update("update Apply set Apply.aRead = 1 where Apply.aID in (select Adoption.aID from Adoption where editor = #{uID})")
+	public Integer resetOwnerApply(Integer uID);
+	
+	@Update("update Apply set Apply.aRead = 1 where Apply.aID = #{aID} "
+			+ " and exists (select * from Adoption where Adoption.editor = #{uID} and Adoption.aID = #{aID})")
+	public Integer readOwnerApply(Integer uID,Integer aID);
 	
 	@Update("update Apply set Apply.read = 1 where aID = #{aID} and applier = #{applier}")
 	public Integer readUserApply(Integer aID,Integer applier);
 	
-	@Select("select count(*) from User, Apply inner join Adoption on Apply.aID = Adoption.aID where Adoption.editor = #{uID} and User.userID = Apply.applier")
-	public Integer getUnreadApplyNumber(Integer uID);
-
-	@Select("select Adoption.aID, Adoption.aTitle, User.username , applyTime as time from User, Apply inner join Adoption on Apply.aID = Adoption.aID where Adoption.editor = #{uID} and User.userID = Apply.applier order by applyTime")
+	@Select("select count(*) "
+			+ "from User, Apply inner join Adoption on Apply.aID = Adoption.aID "
+			+ "where Adoption.editor = #{uID} and User.userID = Apply.applier and Apply.aRead = 0 ")
+	public Integer getOwnerUnreadApplyNumber(Integer uID);
+	
+	@Select("select count(*) "
+			+ "from User, Apply inner join Adoption on Apply.aID = Adoption.aID "
+			+ " where Adoption.applier = #{uID} and User.userID = #{uID} and Apply.read = 0 ")
+	public Integer getUnreadrApplyNumber(Integer uID);
+	
+	@Select("select Adoption.aID, Adoption.aTitle, User.username , applyTime as time "
+			+ " from User, Apply inner join Adoption on Apply.aID = Adoption.aID "
+			+ " where Adoption.applier = #{uID} and User.userID = #{uID} and Apply.read = 0 "
+			+ "order by applyTime")
 	public List<NewInfo> getUnreadApply(Integer uID);
+	
+	@Select("select Adoption.aID, Adoption.aTitle, User.username , applyTime as time "
+			+ " from User, Apply inner join Adoption on Apply.aID = Adoption.aID "
+			+ " where Adoption.editor = #{uID} and User.userID = Apply.applier and Apply.aRead = 0 "
+			+ "order by applyTime")
+	public List<NewInfo> getOwnerUnreadApply(Integer uID);
 
 	@Select("select count(*) from ApplyTimes where uID = #{uID}")
 	public Integer checkApplyTimes(Integer uID);

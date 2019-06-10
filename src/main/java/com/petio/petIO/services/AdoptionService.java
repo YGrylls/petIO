@@ -50,23 +50,43 @@ public class AdoptionService {
 		return 1;
 	}
 	
-	
-	public Integer readApplyByAID(Integer aID) {
-		return mapper.readApply( aID);
+
+	public void readApply(Integer aID) {
+		mapper.readApply(aID);
 	}
-	public Integer readUserApplyByAID(Integer aID,Integer applier) {
-		return mapper.readUserApply(aID, applier);
+
+	public void resetApply(Integer applier) {
+		mapper.resetApply(applier);
+	}
+	public void resetOwnerApply(Integer uID) {
+		mapper.resetOwnerApply(uID);
+	}
+	public void readOwnerApply(Integer uID,Integer aID) {
+		mapper.readOwnerApply(uID, aID);
 	}
 	
-	public List<NewInfo> getUnreadApply(Integer uID) {
+	public void readUserApply(Integer aID,Integer applier) {
+		mapper.readUserApply(aID, applier);
+	}
+	
+	public int getOwnerUnreadApplyNumber(Integer uID) {
+		return mapper.getOwnerUnreadApplyNumber(uID);
+	}
+	
+	public int getUnreadrApplyNumber(Integer uID) {
+		return mapper.getUnreadrApplyNumber(uID);
+	}
+	
+	public List<NewInfo> getUnreadApply(Integer uID){
 		return mapper.getUnreadApply(uID);
 	}
-	public int getUnreadApplyNumber(Integer uID) {
-		return mapper.getUnreadApplyNumber(uID);
+	
+
+	public List<NewInfo> getOwnerUnreadApply(Integer uID){
+		return mapper.getOwnerUnreadApply(uID);
 	}
-	public void resetApply(Integer uID) {
-		mapper.resetApply(uID);
-	}
+	
+	
 	public void initApplyTimes() {
 		mapper.initApplyTimes();
 	}
