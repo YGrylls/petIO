@@ -55,13 +55,13 @@ public interface AdoptionMapper {
 			+ " where Adoption.applier = #{uID} and User.userID = #{uID} and Apply.read = 0 ")
 	public Integer getUnreadrApplyNumber(Integer uID);
 	
-	@Select("select Adoption.aID, Adoption.aTitle, User.username , applyTime as time "
+	@Select("select Adoption.aID, Adoption.aTitle,User.userID  as uID, User.username , applyTime as time "
 			+ " from User, Apply inner join Adoption on Apply.aID = Adoption.aID "
 			+ " where Adoption.applier = #{uID} and User.userID = #{uID} and Apply.read = 0 "
 			+ "order by applyTime")
 	public List<NewInfo> getUnreadApply(Integer uID);
 	
-	@Select("select Adoption.aID, Adoption.aTitle, User.username , applyTime as time "
+	@Select("select Adoption.aID, Adoption.aTitle, User.userID  as uID, User.username , applyTime as time "
 			+ " from User, Apply inner join Adoption on Apply.aID = Adoption.aID "
 			+ " where Adoption.editor = #{uID} and User.userID = Apply.applier and Apply.aRead = 0 "
 			+ "order by applyTime")

@@ -488,6 +488,20 @@ public class UserInfoController {
 	}
 	
 	@CrossOrigin
+	@RequestMapping(value = "/api/comment/read/{id}", method = RequestMethod.POST)
+	@ResponseBody
+	public Result readSingleComment(@PathVariable("id") Integer id,
+			HttpServletRequest request, HttpServletResponse response){
+		int uid = GeneralUtils.getUidByCookie(request,response,userService);
+		if (uid == -1) {
+			return ResultFactory.buildFailResult("未登录");
+		}
+		commentService.readSingleComment(id, uid);
+		
+		return ResultFactory.buildSuccessResult("reset successfully");
+	}
+	
+	@CrossOrigin
 	@RequestMapping(value = "/api/apply/reset", method = RequestMethod.POST)
 	@ResponseBody
 	public Result resetUnreadApply(HttpServletRequest request,HttpServletResponse response) {
@@ -543,6 +557,25 @@ public class UserInfoController {
 			return ResultFactory.buildAuthFailResult("用户未登录或已过期");
 		
 		adoptionService.readOwnerApply(uid, id);
+		return ResultFactory.buildSuccessResult("read ");
+	}
+	@CrossOrigin
+	@RequestMapping(value = "/api/apply/ownerread/{id}/{uID}", method = RequestMethod.POST)
+	@ResponseBody
+	public Result readSingleApply(@PathVariable("id") Integer id,
+			@PathVariable("uID") Integer applier,
+			HttpServletRequest request, HttpServletResponse response){
+		int uid = -1; 
+		try {
+			uid = GeneralUtils.getUidByCookie(request,response,userService); // 通过Cookie获取用户id
+		} catch (Exception e) {
+			System.out.println("fuck:" + e.getMessage());
+			e.printStackTrace();
+		}
+		if (uid == -1)
+			return ResultFactory.buildAuthFailResult("用户未登录或已过期");
+		
+		adoptionService.readUserApply(id, applier);
 		return ResultFactory.buildSuccessResult("read ");
 	}
 }

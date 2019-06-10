@@ -51,19 +51,23 @@ public class CommentService {
 		return commentMapper.getUnreadCommentsNumber(userID);
 	}
 	
-	public Integer setAllCommentsRead(Integer aID) {
-		commentMapper.setAllCommentsOwnerRead(aID);
-		return commentMapper.setAllCommentsRead(aID);
+	public Integer setAllCommentsRead(Integer aID,Integer uID) {
+		commentMapper.setAllCommentsOwnerRead(aID, uID);
+		return commentMapper.setAllCommentsRead(aID, uID);
 	}
 	public Integer resetAllComments(Integer uID) {
 		commentMapper.resetAllCommentsOwnerRead(uID);
 		return commentMapper.resetCommentsRead(uID);
 	}
-	
-	public Integer setSingleCommentRead(Integer aID,Integer cID) {
-		commentMapper.setSingleCommentOwnerRead(aID, cID);
-		return commentMapper.setSingleCommentRead(aID,cID);
+	public void readSingleComment(Integer cID,Integer uID) {
+		commentMapper.readOwnerSingleComment(cID, uID);
+		commentMapper.readSingleComment(cID, uID);
 	}
+	
+//	public Integer setSingleCommentRead(Integer aID,Integer cID) {
+//		commentMapper.setSingleCommentOwnerRead(aID, cID);
+//		return commentMapper.setSingleCommentRead(aID,cID);
+//	}
 	
 	public List<CommentInfo> getComment(Integer aID) {
 		List<CommentInfo> queryRes = commentMapper.getCommentsByAdoptionID(aID);

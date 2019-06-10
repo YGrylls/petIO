@@ -18,11 +18,11 @@ public interface CommentMapper {
 	
 
 	@Select("select * from "
-			+ " (select Comment.aID, aTitle, username , commentText as content , pubtime as time "
+			+ " (select Comment.aID, aTitle, Comment.cID as uID,username , commentText as content , pubtime as time "
 			+ " from User , Comment , Adoption "
 			+ " where Comment.to = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID  "
 			+ " union "
-			+ " select Comment.aID, aTitle, username , commentText as content , pubtime as time "
+			+ " select Comment.aID, aTitle, Comment.cID as uID, username , commentText as content , pubtime as time "
 			+ " from User , Comment , Adoption "
 			+ " where Adoption.editor = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID ) as a"
 			+ "order by time ")
@@ -38,27 +38,33 @@ public interface CommentMapper {
 //	public Integer getUnreadCommentsNumberByuserID(Integer userID);
 	
 	@Select("select count(*) from "
-			+ " (select Comment.aID, aTitle, username , commentText as content , pubtime as time "
+			+ " (select Comment.aID, aTitle, Comment.cID as uID, username , commentText as content , pubtime as time "
 			+ " from User , Comment , Adoption "
 			+ " where Comment.to = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID  "
 			+ " union "
-			+ " select Comment.aID, aTitle, username , commentText as content , pubtime as time "
+			+ " select Comment.aID, aTitle, Comment.cID as uID, username , commentText as content , pubtime as time "
 			+ " from User , Comment , Adoption "
 			+ " where Adoption.editor = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID ) as a "
 			+ "order by time ")
 	public Integer getUnreadCommentsNumber(Integer userID);
 	
-	@Update("UPDATE Comment set Comment.read = 1 where aID = #{aID}")
-	public Integer setAllCommentsRead(Integer aID);
+	@Update("UPDATE Comment set Comment.read = 1 where aID = #{aID} and Comment.to = #{uID}")
+	public Integer setAllCommentsRead(Integer aID,Integer uID);
 	
 	@Update("UPDATE Comment set Comment.read = 1 where Comment.to = #{userID}")
 	public Integer resetCommentsRead(Integer uID);
-	
-	@Update("UPDATE Comment set Comment.aRead = 1 where aID = #{aID}")
-	public Integer setAllCommentsOwnerRead(Integer aID);
+	 
+	@Update("UPDATE Comment set Comment.aRead = 1 where Comment.aID = #{aID} and Comment.aID in (select Adoption.aID from Adoption where editor = #{uID})")
+	public Integer setAllCommentsOwnerRead(Integer aID,Integer uID);
 	
 	@Update("UPDATE Comment set Comment.aRead = 1 where Comment.aID in (select Adoption.aID from Adoption where editor = #{uID})")
 	public Integer resetAllCommentsOwnerRead(Integer uID);
+	
+	@Update("UPDATE Comment set Comment.read = 1 where Comment.cID = #{cID} and Comment.to = #{uID}")
+	public Integer readSingleComment(Integer cID,Integer uID);
+	
+	@Update("UPDATE Comment set Comment.aRead = 1 where  Comment.cID = #{cID} and Comment.aID in (select Adoption.aID from Adoption where editor = #{uID})")
+	public Integer readOwnerSingleComment(Integer cID,Integer uID);
 	
 	@Update("UPDATE Comment set Comment.read = 1 where aID = #{aID} and cID = #{cID}")
 	public Integer setSingleCommentRead(Integer aID,Integer cID);

@@ -6,6 +6,8 @@ public class NewInfo {
 
 	private int aID;
 	
+	
+	
 	private String aTitle;
 	
 	private String username;
@@ -13,9 +15,17 @@ public class NewInfo {
 	private String content;
 	
 	private Time time;
-
+	private int uID;
 	public int getaID() {
 		return aID;
+	}
+
+	public int getuID() {
+		return uID;
+	}
+
+	public void setuID(int uID) {
+		this.uID = uID;
 	}
 
 	public void setaID(int aID) {

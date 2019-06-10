@@ -46,7 +46,7 @@ public class AdoptionDetailController {
 		if (uid == adoption.getEditor()) {
 			adoptionService.resetRead(adoption.getaID());
 
-			commentService.setAllCommentsRead(id);
+			commentService.setAllCommentsRead(id,uid);
 		}
 
 		if (adoption.getaMoney() == 0)
