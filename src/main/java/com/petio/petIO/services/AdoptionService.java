@@ -66,7 +66,7 @@ public class AdoptionService {
 	}
 	
 	public void readUserApply(Integer aID,Integer applier) {
-		mapper.readUserApply(aID, applier);
+		mapper.readUserApplyByOwner(aID, applier);
 	}
 	
 	public int getOwnerUnreadApplyNumber(Integer uID) {

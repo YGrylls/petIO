@@ -42,8 +42,8 @@ public interface AdoptionMapper {
 			+ " and exists (select * from Adoption where Adoption.editor = #{uID} and Adoption.aID = #{aID})")
 	public Integer readOwnerApply(Integer uID,Integer aID);
 	
-	@Update("update Apply set Apply.read = 1 where aID = #{aID} and applier = #{applier}")
-	public Integer readUserApply(Integer aID,Integer applier);
+	@Update("update Apply set Apply.aRead = 1 where aID = #{aID} and applier = #{applier}")
+	public Integer readUserApplyByOwner(Integer aID,Integer applier);
 	
 	@Select("select count(*) "
 			+ "from User, Apply inner join Adoption on Apply.aID = Adoption.aID "
