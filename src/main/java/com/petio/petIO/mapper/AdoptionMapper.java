@@ -57,7 +57,7 @@ public interface AdoptionMapper {
 	
 	@Select("select Adoption.aID, Adoption.aTitle,User.userID  as uID, User.username , applyTime as time "
 			+ " from User, Apply inner join Adoption on Apply.aID = Adoption.aID "
-			+ " where Adoption.applier = #{uID} and User.userID = #{uID} and Apply.read = 0 "
+			+ " where Apply.applier = #{uID} and User.userID = #{uID} and Apply.read = 0 "
 			+ "order by applyTime")
 	public List<NewInfo> getUnreadApply(Integer uID);
 	

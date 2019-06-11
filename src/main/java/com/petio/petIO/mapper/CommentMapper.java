@@ -24,8 +24,8 @@ public interface CommentMapper {
 			+ " union "
 			+ " select Comment.aID, aTitle, Comment.cID as uID, username , commentText as content , pubtime as time "
 			+ " from User , Comment , Adoption "
-			+ " where Adoption.editor = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID ) as a"
-			+ "order by time ")
+			+ " where Adoption.editor = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID ) as a "
+			+ " order by time ")
 	public List<NewInfo> getUnreadComments(Integer userID);
 	
 	@Select("select Comment.aID, aTitle, username , commentText as content , pubtime as time from User , Comment , Adoption where Comment.to = #{userID} and User.userID = Comment.from and Adoption.aID = Comment.aID order by Comment.pubtime")
