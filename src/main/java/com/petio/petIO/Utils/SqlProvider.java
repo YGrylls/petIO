@@ -36,7 +36,7 @@ public class SqlProvider {
 			page = 1;
 		}
 		int offset = 20 * (page - 1);
-		sql.append(" limit " + offset + " , " + noteNumber);
+		sql.append(" order by publishDate limit " + offset + " , " + noteNumber);
 		System.out.println(sql.toString());
 		return sql.toString();
 	}
