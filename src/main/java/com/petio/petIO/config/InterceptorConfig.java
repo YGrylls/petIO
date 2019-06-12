@@ -1,9 +1,7 @@
 package com.petio.petIO.config;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ResourceUtils;
@@ -22,7 +20,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 	}
 
 	public void addInterceptors(InterceptorRegistry registry) {
-		
+
 		registry.addInterceptor(getCORSInterceptor()).addPathPatterns("/**");
 	}
 
@@ -37,20 +35,20 @@ public class InterceptorConfig implements WebMvcConfigurer {
 			if (!path.exists()) {
 				path = new File("");
 			}
-			System.out.println("path:"+path.getAbsolutePath());
-			File upload = new File(path.getAbsolutePath(),"static/images/upload/");
+			System.out.println("path:" + path.getAbsolutePath());
+			File upload = new File(path.getAbsolutePath(), "/home/img/");
 			if (!upload.exists()) {
 				upload.mkdirs();
 			}
-			System.out.println("upload url:"+upload.getAbsolutePath());
-			absolutePath+=(upload.getAbsolutePath().replace('\\', '/')+'/');
+			System.out.println("upload url:" + upload.getAbsolutePath());
+			absolutePath += (upload.getAbsolutePath().replace('\\', '/') + '/');
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("absolutePath:"+absolutePath);
+		System.out.println("absolutePath:" + absolutePath);
 		registry.addResourceHandler("/image/**").addResourceLocations(absolutePath);
 //		WebMvcConfigurer.super.addResourceHandlers(registry);
 	}
-	
+
 }
