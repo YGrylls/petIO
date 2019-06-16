@@ -70,7 +70,7 @@ public class VerifyService {
 		final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
 		try {
 			message.setFrom(new InternetAddress(sendUser, "PetIO网站管理员", "UTF-8"));
-			message.setTo("q1006280595@163.com");
+			message.setTo(receiver);
 			message.setSubject(subject);
 			message.setText(content, true);
 		} catch (MessagingException e) {
