@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -38,7 +39,10 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.xbill.DNS.Lookup;
 import org.xbill.DNS.MXRecord;
@@ -48,18 +52,13 @@ import org.xbill.DNS.Type;
 
 @Service
 public class VerifyService {
-	@Value("${mail.address}")
-	public String mailAddress;
 
-	@Value("${mail.host}")
-	public String mailHost;
-
-	@Value("${mail.tp}")
-	public String mailTP;
-
-	@Value("${mail.password}")
-	public String mailPassword;
-
+	@Autowired
+	private JavaMailSender mailSender;
+	
+	@Value("${spring.mail.username}")
+	private String sendUser;
+	
 	public static final String VERIFY_CODES = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 	private static Random random = new Random();
 
@@ -67,35 +66,22 @@ public class VerifyService {
 		if (!valid(receiver)) {
 			return "mail address not exist";
 		}
-		System.out.println("receiver:" + receiver);
-		Properties prop = new Properties();
-		prop.setProperty("mail.host", mailHost);
-		prop.setProperty("mail.transport.protocol", mailTP);
-		prop.setProperty("mail.smtp.auth", "true");
-		// 使用JavaMail发送邮件的5个步骤
-		// 1、创建session
-		Session session = Session.getInstance(prop);
-		// 开启Session的debug模式，这样就可以查看到程序发送Email的运行状态
-		session.setDebug(true);
-		// 2、通过session得到transport对象
-		Transport ts;
-
+		final MimeMessage mimeMessage = mailSender.createMimeMessage();
+		final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
 		try {
-			ts = session.getTransport();
-			// 3、使用邮箱的用户名和密码连上邮件服务器，发送邮件时，发件人需要提交邮箱的用户名和密码给smtp服务器，用户名和密码都通过验证之后才能够正常发送邮件给收件人。
-
-			ts.connect(mailHost, mailAddress, mailPassword);
-			String contentString = "本次操作验证码为： " + "<b>" + generateVerifyCode(6) + "</b>";
-			Message message = createSimpleMail(session, receiver, subject, content);
-//			//5、发送邮件
-			ts.sendMessage(message, message.getAllRecipients());
-			ts.close();
-		} catch (Exception e) {
+			message.setFrom(new InternetAddress(sendUser, "PetIO网站管理员", "UTF-8"));
+			message.setTo("q1006280595@163.com");
+			message.setSubject(subject);
+			message.setText(content, true);
+		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
-
 			e.printStackTrace();
-			return "error occur";
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		 
+        mailSender.send(mimeMessage);
 		return UUID.randomUUID().toString();
 	}
 
@@ -195,30 +181,6 @@ public class VerifyService {
 			}
 		}
 		return code;
-	}
-
-	public MimeMessage createSimpleMail(Session session, String receiver, String subject, String content)
-			throws MessagingException {
-		// 创建邮件对象
-		MimeMessage message = new MimeMessage(session);
-		// 指明邮件的发件人
-
-		try {
-			message.setFrom(new InternetAddress(mailAddress, "PetIO网站管理员", "UTF-8"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// 指明邮件的收件人，现在发件人和收件人是一样的，那就是自己给自己发
-		message.setRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
-		// 邮件的标题
-		message.setSubject(subject);
-		// 邮件的文本内容
-		message.setContent(content, "text/html;charset=UTF-8");
-
-		// "本次操作验证码为： "+"<b>"+ generateVerifyCode(6)+"</b>"
-		// 返回创建好的邮件对象
-		return message;
 	}
 
 	/**
