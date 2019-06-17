@@ -7,65 +7,39 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.CompareToBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.xbill.DNS.Lookup;
-import org.xbill.DNS.MXRecord;
-import org.xbill.DNS.Record;
-import org.xbill.DNS.TextParseException;
-import org.xbill.DNS.Type;
 
 @Service
 public class VerifyService {
 
 	@Autowired
 	private JavaMailSender mailSender;
-	
+
 	@Value("${spring.mail.username}")
 	private String sendUser;
-	
+
 	public static final String VERIFY_CODES = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 	private static Random random = new Random();
 
 	public String sendMail(String receiver, String subject, String content) {
-		if (!valid(receiver)) {
-			return "mail address not exist";
-		}
 		final MimeMessage mimeMessage = mailSender.createMimeMessage();
 		final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
 		try {
@@ -80,108 +54,108 @@ public class VerifyService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		 
-        mailSender.send(mimeMessage);
+
+		mailSender.send(mimeMessage);
 		return UUID.randomUUID().toString();
 	}
 
-	public boolean valid(String toMail) {
-		String domain = "petio.org";
-		if (StringUtils.isBlank(toMail) || StringUtils.isBlank(domain))
-			return false;
-		if (!StringUtils.contains(toMail, '@'))
-			return false;
-		String host = toMail.substring(toMail.indexOf('@') + 1);
-		if (host.equals(domain))
-			return false;
-		Socket socket = new Socket();
-		try {
-			// 查找mx记录
-			Record[] mxRecords = new Lookup(host, Type.MX).run();
-			if (ArrayUtils.isEmpty(mxRecords))
-				return false;
-			// 邮件服务器地址
-			String mxHost = ((MXRecord) mxRecords[0]).getTarget().toString();
-			if (mxRecords.length > 1) { // 优先级排序
-				List<Record> arrRecords = new ArrayList<Record>();
-				Collections.addAll(arrRecords, mxRecords);
-				Collections.sort(arrRecords, new Comparator<Record>() {
-
-					public int compare(Record o1, Record o2) {
-						return new CompareToBuilder()
-								.append(((MXRecord) o1).getPriority(), ((MXRecord) o2).getPriority()).toComparison();
-					}
-
-				});
-				mxHost = ((MXRecord) arrRecords.get(0)).getTarget().toString();
-			}
-			// 开始smtp
-			socket.connect(new InetSocketAddress(mxHost, 25));
-			BufferedReader bufferedReader = new BufferedReader(
-					new InputStreamReader(new BufferedInputStream(socket.getInputStream())));
-			BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			// 超时时间(毫秒)
-			long timeout = 6000;
-			// 睡眠时间片段(50毫秒)
-			int sleepSect = 50;
-
-			// 连接(服务器是否就绪)
-			if (getResponseCode(timeout, sleepSect, bufferedReader) != 220) {
-				return false;
-			}
-
-			// 握手
-			bufferedWriter.write("HELO " + domain + "\r\n");
-			bufferedWriter.flush();
-			if (getResponseCode(timeout, sleepSect, bufferedReader) != 250) {
-				return false;
-			}
-			// 身份
-			bufferedWriter.write("MAIL FROM: <check@" + domain + ">\r\n");
-			bufferedWriter.flush();
-			if (getResponseCode(timeout, sleepSect, bufferedReader) != 250) {
-				return false;
-			}
-			// 验证
-			bufferedWriter.write("RCPT TO: <" + toMail + ">\r\n");
-			bufferedWriter.flush();
-			if (getResponseCode(timeout, sleepSect, bufferedReader) != 250) {
-				return false;
-			}
-			// 断开
-			bufferedWriter.write("QUIT\r\n");
-			bufferedWriter.flush();
-			return true;
-		} catch (NumberFormatException e) {
-		} catch (TextParseException e) {
-		} catch (IOException e) {
-		} catch (InterruptedException e) {
-		} finally {
-			try {
-				socket.close();
-			} catch (IOException e) {
-			}
-		}
-		return false;
-	}
-
-	private int getResponseCode(long timeout, int sleepSect, BufferedReader bufferedReader)
-			throws InterruptedException, NumberFormatException, IOException {
-		int code = 0;
-		for (long i = sleepSect; i < timeout; i += sleepSect) {
-			Thread.sleep(sleepSect);
-			if (bufferedReader.ready()) {
-				String outline = bufferedReader.readLine();
-				// FIXME 读完……
-				while (bufferedReader.ready())
-					/* System.out.println( */bufferedReader.readLine()/* ) */;
-				/* System.out.println(outline); */
-				code = Integer.parseInt(outline.substring(0, 3));
-				break;
-			}
-		}
-		return code;
-	}
+//	public boolean valid(String toMail) {
+//		String domain = "petio.org";
+//		if (StringUtils.isBlank(toMail) || StringUtils.isBlank(domain))
+//			return false;
+//		if (!StringUtils.contains(toMail, '@'))
+//			return false;
+//		String host = toMail.substring(toMail.indexOf('@') + 1);
+//		if (host.equals(domain))
+//			return false;
+//		Socket socket = new Socket();
+//		try {
+//			// 查找mx记录
+//			Record[] mxRecords = new Lookup(host, Type.MX).run();
+//			if (ArrayUtils.isEmpty(mxRecords))
+//				return false;
+//			// 邮件服务器地址
+//			String mxHost = ((MXRecord) mxRecords[0]).getTarget().toString();
+//			if (mxRecords.length > 1) { // 优先级排序
+//				List<Record> arrRecords = new ArrayList<Record>();
+//				Collections.addAll(arrRecords, mxRecords);
+//				Collections.sort(arrRecords, new Comparator<Record>() {
+//
+//					public int compare(Record o1, Record o2) {
+//						return new CompareToBuilder()
+//								.append(((MXRecord) o1).getPriority(), ((MXRecord) o2).getPriority()).toComparison();
+//					}
+//
+//				});
+//				mxHost = ((MXRecord) arrRecords.get(0)).getTarget().toString();
+//			}
+//			// 开始smtp
+//			socket.connect(new InetSocketAddress(mxHost, 25));
+//			BufferedReader bufferedReader = new BufferedReader(
+//					new InputStreamReader(new BufferedInputStream(socket.getInputStream())));
+//			BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+//			// 超时时间(毫秒)
+//			long timeout = 6000;
+//			// 睡眠时间片段(50毫秒)
+//			int sleepSect = 50;
+//
+//			// 连接(服务器是否就绪)
+//			if (getResponseCode(timeout, sleepSect, bufferedReader) != 220) {
+//				return false;
+//			}
+//
+//			// 握手
+//			bufferedWriter.write("HELO " + domain + "\r\n");
+//			bufferedWriter.flush();
+//			if (getResponseCode(timeout, sleepSect, bufferedReader) != 250) {
+//				return false;
+//			}
+//			// 身份
+//			bufferedWriter.write("MAIL FROM: <check@" + domain + ">\r\n");
+//			bufferedWriter.flush();
+//			if (getResponseCode(timeout, sleepSect, bufferedReader) != 250) {
+//				return false;
+//			}
+//			// 验证
+//			bufferedWriter.write("RCPT TO: <" + toMail + ">\r\n");
+//			bufferedWriter.flush();
+//			if (getResponseCode(timeout, sleepSect, bufferedReader) != 250) {
+//				return false;
+//			}
+//			// 断开
+//			bufferedWriter.write("QUIT\r\n");
+//			bufferedWriter.flush();
+//			return true;
+//		} catch (NumberFormatException e) {
+//		} catch (TextParseException e) {
+//		} catch (IOException e) {
+//		} catch (InterruptedException e) {
+//		} finally {
+//			try {
+//				socket.close();
+//			} catch (IOException e) {
+//			}
+//		}
+//		return false;
+//	}
+//
+//	private int getResponseCode(long timeout, int sleepSect, BufferedReader bufferedReader)
+//			throws InterruptedException, NumberFormatException, IOException {
+//		int code = 0;
+//		for (long i = sleepSect; i < timeout; i += sleepSect) {
+//			Thread.sleep(sleepSect);
+//			if (bufferedReader.ready()) {
+//				String outline = bufferedReader.readLine();
+//				// FIXME 读完……
+//				while (bufferedReader.ready())
+//					/* System.out.println( */bufferedReader.readLine()/* ) */;
+//				/* System.out.println(outline); */
+//				code = Integer.parseInt(outline.substring(0, 3));
+//				break;
+//			}
+//		}
+//		return code;
+//	}
 
 	/**
 	 * 使用系统默认字符源生成验证码
