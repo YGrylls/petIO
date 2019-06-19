@@ -104,7 +104,7 @@ public class LoginController {
 			HttpServletResponse response) {
 		System.out.println(mailAddress);
 		if (userService.checkMailAddress(mailAddress) > 0) {
-			ResultFactory.buildFailResult("邮箱已被注册");
+			return ResultFactory.buildFailResult("邮箱已被注册");
 		}
 //		if (verifyService.valid(mailAddress)) {
 		String verifyCode = verifyService.generateVerifyCode(6);

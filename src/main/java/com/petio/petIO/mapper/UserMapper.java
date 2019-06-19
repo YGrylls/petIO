@@ -44,10 +44,10 @@ public interface UserMapper {
 	@Update("update User set password = #{newpass} where userMail = #{mail}")
 	public Integer changePasswordByMail(String mail, String newpass);
 
-	@Select("select count(*) from Adoption where aID = #{uid}")
+	@Select("select count(*) from Adoption where editor = #{uid}")
 	public Integer getAdoptionCountByID(Integer uid);
 
-	@Select("select count(*) from Adoption where aID = #{uid} and aState = 5")
+	@Select("select count(*) from Adoption where editor = #{uid} and aState = 5")
 	public Integer getCompleteAdoptionCountByID(Integer uid);
 
 	@Select("select count(*) from Record where acceptor = #{uid} and stage = 'SecondHandShake'")
